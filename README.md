@@ -2,7 +2,7 @@
 
 Guía interactiva de lenguajes de programación: su historia, para qué sirven, sus paradigmas y sus extensiones de archivo.
 
-🔗 **Demo:** https://mtorrespro2fp.github.io/lenghist
+🔗 **Demo:** https://mun1to.github.io/lenghist
 
 ## Características
 
