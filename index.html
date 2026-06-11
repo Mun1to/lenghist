@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lenghist — Guía de Lenguajes de Programación</title>
+<meta name="description" content="Lenghist: guía interactiva de lenguajes de programación, su historia, para qué sirven y sus extensiones de archivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     LENGHIST — variables de tema
+     ============================================================ */
+  :root {
+    --bg: #09090b;
+    --surface: #18181b;
+    --surface-2: #1f1f23;
+    --border: #27272a;
+    --border-strong: #3f3f46;
+    --text: #fafafa;
+    --text-dim: #a1a1aa;
+    --text-faint: #71717a;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --accent-soft: rgba(99, 102, 241, 0.12);
+    --code-bg: #0c0c0f;
+    --good: #34d399;
+    --bad: #f87171;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --radius: 14px;
+    --maxw: 1280px;
+  }
+  html[data-theme="light"] {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-2: #f4f4f5;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --text: #09090b;
+    --text-dim: #52525b;
+    --text-faint: #a1a1aa;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-soft: rgba(79, 70, 229, 0.08);
+    --code-bg: #0c0c0f;
+    --good: #059669;
+    --bad: #dc2626;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    transition: background .35s ease, color .35s ease;
+    min-height: 100vh;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* fondo sutil con cuadrícula */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: .25;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 30%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition: background .35s ease, border-color .35s ease;
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 0;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em; white-space: nowrap; }
+  .logo .glyph {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    padding: 4px 8px; border-radius: 8px; font-size: .95rem;
+    transition: transform .25s ease;
+  }
+  .logo:hover .glyph { transform: translateY(-1px) rotate(-3deg); }
+  .logo .name b { color: var(--accent); }
+  .logo .tag { display: block; font-size: .68rem; font-weight: 500; color: var(--text-faint); letter-spacing: .02em; }
+
+  .searchbar { position: relative; max-width: 460px; width: 100%; justify-self: center; }
+  .searchbar svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-faint); pointer-events: none; }
+  .searchbar input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px 9px 38px;
+    border-radius: 10px;
+    font-size: .9rem;
+    font-family: inherit;
+    transition: border-color .2s, box-shadow .2s, background .35s;
+  }
+  .searchbar input::placeholder { color: var(--text-faint); }
+  .searchbar input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .searchbar kbd {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+    color: var(--text-faint); border: 1px solid var(--border); border-radius: 5px;
+    padding: 1px 5px; background: var(--surface-2);
+  }
+
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+  .iconbtn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    height: 38px; padding: 0 10px; min-width: 38px;
+    border-radius: 10px; cursor: pointer;
+    font-family: inherit; font-size: .82rem; font-weight: 600;
+    transition: border-color .2s, color .2s, background .2s, transform .15s;
+  }
+  .iconbtn:hover { color: var(--text); border-color: var(--border-strong); transform: translateY(-1px); }
+  .iconbtn:active { transform: translateY(0); }
+  .iconbtn svg { display: block; }
+  /* icono de tema: anima al cambiar */
+  #themeBtn .sun, #themeBtn .moon { transition: opacity .25s, transform .4s; }
+  html[data-theme="dark"] #themeBtn .moon { display: none; }
+  html[data-theme="light"] #themeBtn .sun { display: none; }
+  /* botón idioma */
+  #langBtn .lang-code { font-family: 'JetBrains Mono', monospace; letter-spacing: .03em; }
+  #langBtn .globe { transition: transform .5s ease; }
+  #langBtn.spin .globe { transform: rotate(360deg); }
+
+  /* ============================================================
+     SUB-HEADER: filtros de categoría
+     ============================================================ */
+  .filters-row { border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 70%, transparent); }
+  .filters {
+    display: flex; gap: 8px; padding: 12px 0; overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .filters::-webkit-scrollbar { height: 6px; }
+  .filters::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .chip {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 14px; border-radius: 999px;
+    font-family: inherit; font-size: .83rem; font-weight: 600; cursor: pointer;
+    white-space: nowrap;
+    transition: all .18s ease;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text); }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--accent-soft);
+  }
+  .chip .count { opacity: .65; font-weight: 500; margin-left: 2px; }
+
+  /* ============================================================
+     HERO / intro
+     ============================================================ */
+  .hero { padding: 48px 0 28px; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p { color: var(--text-dim); margin-top: 12px; max-width: 620px; font-size: 1.02rem; }
+  .statusbar {
+    display: flex; align-items: center; gap: 10px; margin-top: 20px;
+    font-size: .82rem; color: var(--text-faint);
+  }
+  .statusbar .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); box-shadow: 0 0 8px var(--good); }
+  .statusbar .count-pill {
+    font-family: 'JetBrains Mono', monospace; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 3px 9px; border-radius: 7px;
+  }
+
+  /* ============================================================
+     GRID DE CARDS
+     ============================================================ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 8px 0 80px;
+  }
+  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px)  { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color .2s, transform .2s, box-shadow .25s;
+    overflow: hidden;
+    animation: cardIn .4s ease both;
+  }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .card::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--lang-color, var(--accent));
+    opacity: 0; transition: opacity .2s;
+  }
+  .card:hover { border-color: var(--border-strong); transform: translateY(-3px); box-shadow: var(--shadow); }
+  .card:hover::before { opacity: 1; }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .card-id { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .card-icon {
+    font-size: 1.5rem; line-height: 1;
+    width: 42px; height: 42px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .card-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; }
+  .card-year { font-size: .76rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+
+  .fame {
+    flex: 0 0 auto;
+    font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    padding: 3px 8px; border-radius: 6px;
+    border: 1px solid transparent;
+  }
+  .fame.top     { color: #fbbf24; background: rgba(251,191,36,.1); border-color: rgba(251,191,36,.25); }
+  .fame.popular { color: var(--accent-hover); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .fame.medium  { color: var(--text-dim); background: var(--surface-2); border-color: var(--border); }
+  .fame.niche   { color: var(--text-faint); background: transparent; border-color: var(--border); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: .7rem; font-weight: 600; color: var(--text-dim);
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 2px 8px; border-radius: 5px;
+  }
+  .card-desc {
+    color: var(--text-dim); font-size: .88rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ext-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ext-label { font-size: .68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: .05em; margin-right: 2px; }
+  .ext {
+    font-family: 'JetBrains Mono', monospace; font-size: .74rem; font-weight: 500;
+    color: var(--accent-hover);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    padding: 1px 7px; border-radius: 5px;
+  }
+  .uses-row { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 2px; }
+  .card-foot { margin-top: auto; padding-top: 4px; }
+  .wiki-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: .74rem; font-weight: 600; color: var(--text-faint);
+    text-decoration: none; border-radius: 6px; padding: 2px 0;
+    transition: color .18s;
+  }
+  .wiki-link:hover { color: var(--accent-hover); }
+  .wiki-link svg { opacity: .8; }
+  .pill {
+    font-size: .72rem; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px;
+  }
+
+  /* sin resultados */
+  .empty {
+    display: none; text-align: center; padding: 80px 20px; color: var(--text-faint);
+  }
+  .empty.show { display: block; animation: cardIn .3s ease both; }
+  .empty .big { font-size: 3rem; margin-bottom: 8px; }
+  .empty h3 { color: var(--text); font-weight: 700; margin-bottom: 6px; }
+  .empty button { margin-top: 16px; }
+
+  /* ============================================================
+     MODAL
+     ============================================================ */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 40px 20px; overflow-y: auto;
+    opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s;
+  }
+  .overlay.open { opacity: 1; visibility: visible; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    max-width: 720px; width: 100%;
+    box-shadow: var(--shadow);
+    transform: translateY(16px) scale(.98); opacity: 0;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .25s;
+  }
+  .overlay.open .modal { transform: none; opacity: 1; }
+  .modal-head {
+    position: relative;
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-head::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+    background: linear-gradient(90deg, var(--lang-color, var(--accent)), transparent);
+  }
+  .modal-id { display: flex; align-items: center; gap: 14px; }
+  .modal-icon {
+    font-size: 2rem; width: 54px; height: 54px; flex: 0 0 auto;
+    display: grid; place-items: center; border-radius: 12px;
+    background: var(--surface-2); border: 1px solid var(--border);
+  }
+  .modal-id h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; }
+  .modal-meta { font-size: .8rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .modal-close {
+    position: absolute; top: 18px; right: 18px;
+    width: 34px; height: 34px; display: grid; place-items: center;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 9px; color: var(--text-dim); cursor: pointer;
+    transition: all .18s;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--border-strong); transform: rotate(90deg); }
+  .modal-body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 22px; }
+  .modal-body p.lead { color: var(--text-dim); font-size: .95rem; }
+
+  .section-title {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-faint); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before { content: ""; width: 4px; height: 12px; border-radius: 2px; background: var(--lang-color, var(--accent)); }
+
+  .popbar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--border); }
+  .popbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); border-radius: 999px; width: 0; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+  .pop-num { font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: var(--text-dim); margin-top: 6px; }
+
+  .ext-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ext-grid .ext { font-size: .82rem; padding: 4px 10px; }
+
+  pre.code {
+    background: var(--code-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    padding: 16px; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: .82rem; line-height: 1.6;
+    color: #e4e4e7;
+  }
+  pre.code .cmt { color: #6b7280; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 560px) { .twocol { grid-template-columns: 1fr; } }
+  .pc-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .pc-list li { font-size: .85rem; color: var(--text-dim); display: flex; gap: 8px; align-items: flex-start; }
+  .pc-list li::before { font-weight: 700; flex: 0 0 auto; }
+  .pros li::before { content: "+"; color: var(--good); }
+  .cons li::before { content: "−"; color: var(--bad); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .info-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .info-box .k { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); }
+  .info-box .v { font-size: .9rem; font-weight: 600; margin-top: 3px; }
+
+  footer.site { border-top: 1px solid var(--border); padding: 28px 0; color: var(--text-faint); font-size: .82rem; text-align: center; }
+  footer.site b { color: var(--accent); }
+
+  /* responsive header */
+  @media (max-width: 860px) {
+    .header-grid { grid-template-columns: auto auto; grid-template-areas: "logo actions" "search search"; row-gap: 12px; }
+    .logo { grid-area: logo; }
+    .header-actions { grid-area: actions; justify-self: end; }
+    .searchbar { grid-area: search; max-width: none; }
+    .searchbar kbd { display: none; }
+  }
+  .logo .tag { display: none; }
+  @media (min-width: 520px) { .logo .tag { display: block; } }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="header-grid">
+      <a href="#" class="logo" aria-label="Lenghist inicio">
+        <span class="glyph">&lt;/&gt;</span>
+        <span class="name"><b>Leng</b>hist<span class="tag" data-i18n="tagline">Guía de lenguajes</span></span>
+      </a>
+
+      <div class="searchbar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="text" autocomplete="off" data-i18n-ph="searchPlaceholder" placeholder="Buscar lenguaje, uso o .ext…">
+        <kbd>/</kbd>
+      </div>
+
+      <div class="header-actions">
+        <!-- BOTÓN DE IDIOMA -->
+        <button class="iconbtn" id="langBtn" aria-label="Cambiar idioma" title="Cambiar idioma">
+          <svg class="globe" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
+          <span class="lang-code" id="langCode">ES</span>
+        </button>
+        <!-- BOTÓN DE TEMA -->
+        <button class="iconbtn" id="themeBtn" aria-label="Cambiar tema" title="Cambiar tema">
+          <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters-row">
+    <div class="wrap">
+      <div class="filters" id="filters"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1 data-i18n="heroTitle">El atlas de los <span class="accent">lenguajes de programación</span></h1>
+    <p data-i18n="heroSub">Su historia, para qué sirven, sus paradigmas y sus extensiones de archivo. Filtra, busca y explora 28 lenguajes con datos reales.</p>
+    <div class="statusbar">
+      <span class="dot"></span>
+      <span id="statusText"></span>
+    </div>
+  </section>
+
+  <section class="grid" id="grid"></section>
+
+  <div class="empty" id="empty">
+    <div class="big">🔍</div>
+    <h3 data-i18n="emptyTitle">Sin resultados</h3>
+    <p data-i18n="emptySub">Ningún lenguaje coincide con tu búsqueda o filtro.</p>
+    <button class="iconbtn" id="resetBtn" data-i18n="emptyReset">Limpiar filtros</button>
+  </div>
+</main>
+
+<footer class="site wrap">
+  <span data-i18n="footer">Hecho con</span> <b>&lt;/&gt;</b> · <span class="mono">Lenghist</span> · 28 <span data-i18n="footerLangs">lenguajes</span>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<script>
+/* ============================================================
+   LENGHIST — i18n (ES / EN)
+   ============================================================ */
+const I18N = {
+  es: {
+    tagline: "Guía de lenguajes",
+    searchPlaceholder: "Buscar lenguaje, uso o .ext…",
+    heroTitle: 'El atlas de los <span class="accent">lenguajes de programación</span>',
+    heroSub: "Su historia, para qué sirven, sus paradigmas y sus extensiones de archivo. Filtra, busca y explora 28 lenguajes con datos reales.",
+    emptyTitle: "Sin resultados",
+    emptySub: "Ningún lenguaje coincide con tu búsqueda o filtro.",
+    emptyReset: "Limpiar filtros",
+    footer: "Hecho con",
+    footerLangs: "lenguajes",
+    showing: (x, y) => `Mostrando <span class="count-pill">${x}</span> de ${y} lenguajes`,
+    cats: { all:"Todos", web:"Web", sistemas:"Sistemas", datos:"Datos", movil:"Móvil", cientifico:"Científico", scripting:"Scripting", funcional:"Funcional", educativo:"Educativo" },
+    fame: { top:"Top mundial", popular:"Muy popular", medium:"Popular", niche:"Nicho" },
+    extLabel: "Ext",
+    source: "Fuente",
+    m: { popularity:"Popularidad", extensions:"Extensiones de archivo", example:"Ejemplo · Hola Mundo", pros:"Ventajas", cons:"Desventajas", creator:"Creador", paradigm:"Paradigma", uses:"Casos de uso", born:"Aparición", source:"Más información" }
+  },
+  en: {
+    tagline: "Language guide",
+    searchPlaceholder: "Search language, use case or .ext…",
+    heroTitle: 'The atlas of <span class="accent">programming languages</span>',
+    heroSub: "Their history, what they're for, their paradigms and file extensions. Filter, search and explore 28 languages with real data.",
+    emptyTitle: "No results",
+    emptySub: "No language matches your search or filter.",
+    emptyReset: "Clear filters",
+    footer: "Built with",
+    footerLangs: "languages",
+    showing: (x, y) => `Showing <span class="count-pill">${x}</span> of ${y} languages`,
+    cats: { all:"All", web:"Web", sistemas:"Systems", datos:"Data", movil:"Mobile", cientifico:"Scientific", scripting:"Scripting", funcional:"Functional", educativo:"Educational" },
+    fame: { top:"World top", popular:"Very popular", medium:"Popular", niche:"Niche" },
+    extLabel: "Ext",
+    source: "Source",
+    m: { popularity:"Popularity", extensions:"File extensions", example:"Example · Hello World", pros:"Pros", cons:"Cons", creator:"Creator", paradigm:"Paradigm", uses:"Use cases", born:"Released", source:"More info" }
+  }
+};
+
+/* ============================================================
+   DATOS — 28 lenguajes (bilingüe ES/EN)
+   ============================================================ */
+const LANGS = [
+  {
+    name:"Python", year:1991, icon:"🐍", color:"#3776ab", fame:"top", popularity:98,
+    categories:["scripting","datos","cientifico","web"], creator:"Guido van Rossum",
+    extensions:[".py",".pyw",".pyc",".pyi",".ipynb"],
+    example:`print("¡Hola, mundo!")`,
+    es:{ desc:"Lenguaje versátil y legible, rey de la IA, ciencia de datos y automatización.",
+      fullDesc:"Python prioriza la legibilidad y la productividad. Su sintaxis limpia y su enorme ecosistema (NumPy, Pandas, TensorFlow, Django) lo han convertido en el lenguaje dominante en inteligencia artificial, análisis de datos, scripting y backend.",
+      paradigm:"Multiparadigma · interpretado", uses:["Inteligencia artificial","Ciencia de datos","Automatización"],
+      pros:["Sintaxis muy legible","Ecosistema gigantesco","Comunidad enorme"], cons:["Lento en ejecución","GIL limita hilos","Tipado dinámico"] },
+    en:{ desc:"Versatile, readable language; king of AI, data science and automation.",
+      fullDesc:"Python prioritizes readability and productivity. Its clean syntax and huge ecosystem (NumPy, Pandas, TensorFlow, Django) made it the dominant language for AI, data analysis, scripting and backend.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Artificial intelligence","Data science","Automation"],
+      pros:["Very readable syntax","Massive ecosystem","Huge community"], cons:["Slow runtime","GIL limits threads","Dynamic typing"] }
+  },
+  {
+    name:"JavaScript", year:1995, icon:"🟨", color:"#f7df1e", fame:"top", popularity:97,
+    categories:["web","scripting"], creator:"Brendan Eich",
+    extensions:[".js",".mjs",".cjs"],
+    example:`console.log("¡Hola, mundo!");`,
+    es:{ desc:"El lenguaje de la web. Corre en todos los navegadores y también en el servidor.",
+      fullDesc:"JavaScript nació para dar vida a las páginas web y hoy es omnipresente: frontend (React, Vue), backend (Node.js), móvil y escritorio. Es el único lenguaje que ejecutan de forma nativa todos los navegadores.",
+      paradigm:"Multiparadigma · interpretado", uses:["Frontend web","Backend (Node)","Apps interactivas"],
+      pros:["Funciona en todo navegador","Ecosistema npm enorme","Asíncrono potente"], cons:["Rarezas históricas","Tipado débil","Fatiga de frameworks"] },
+    en:{ desc:"The language of the web. Runs in every browser and on the server too.",
+      fullDesc:"JavaScript was born to bring web pages to life and is now everywhere: frontend (React, Vue), backend (Node.js), mobile and desktop. It's the only language every browser runs natively.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Web frontend","Backend (Node)","Interactive apps"],
+      pros:["Runs in every browser","Huge npm ecosystem","Powerful async"], cons:["Historical quirks","Weak typing","Framework fatigue"] }
+  },
+  {
+    name:"Java", year:1995, icon:"☕", color:"#f89820", fame:"top", popularity:90,
+    categories:["sistemas","web","movil"], creator:"James Gosling (Sun)",
+    extensions:[".java",".class",".jar"],
+    example:`class Main {\n  public static void main(String[] a) {\n    System.out.println("¡Hola, mundo!");\n  }\n}`,
+    es:{ desc:"Robusto y multiplataforma: \"escribe una vez, ejecuta en cualquier lugar\".",
+      fullDesc:"Java corre sobre la JVM, lo que le da portabilidad total. Domina sistemas empresariales, backend de gran escala y Android (históricamente). Es estricto, tipado y muy maduro.",
+      paradigm:"Orientado a objetos · compilado a bytecode", uses:["Apps empresariales","Backend a gran escala","Android"],
+      pros:["Multiplataforma (JVM)","Muy maduro y estable","Gran rendimiento"], cons:["Verboso","Arranque pesado","Boilerplate"] },
+    en:{ desc:"Robust and cross-platform: \"write once, run anywhere\".",
+      fullDesc:"Java runs on the JVM, giving it full portability. It dominates enterprise systems, large-scale backend and Android (historically). It's strict, typed and very mature.",
+      paradigm:"Object-oriented · compiled to bytecode", uses:["Enterprise apps","Large-scale backend","Android"],
+      pros:["Cross-platform (JVM)","Very mature & stable","Great performance"], cons:["Verbose","Heavy startup","Boilerplate"] }
+  },
+  {
+    name:"C", year:1972, icon:"🔧", color:"#a8b9cc", fame:"popular", popularity:82,
+    categories:["sistemas"], creator:"Dennis Ritchie",
+    extensions:[".c",".h"],
+    example:`#include <stdio.h>\nint main() {\n  printf("¡Hola, mundo!\\n");\n  return 0;\n}`,
+    es:{ desc:"El lenguaje de sistemas por excelencia. Base de casi todo lo demás.",
+      fullDesc:"C es minimalista, rápido y cercano al hardware. Sobre él se construyeron Unix, Linux, Windows y la mayoría de lenguajes modernos. Da control total sobre la memoria, con la responsabilidad que eso implica.",
+      paradigm:"Procedural · compilado", uses:["Sistemas operativos","Drivers y embebidos","Compiladores"],
+      pros:["Velocidad extrema","Control total de memoria","Portable y universal"], cons:["Gestión manual de memoria","Inseguro si descuidas","Sin abstracciones modernas"] },
+    en:{ desc:"The systems language par excellence. The foundation of nearly everything else.",
+      fullDesc:"C is minimal, fast and close to the hardware. Unix, Linux, Windows and most modern languages were built on it. It gives total control over memory, with the responsibility that entails.",
+      paradigm:"Procedural · compiled", uses:["Operating systems","Drivers & embedded","Compilers"],
+      pros:["Extreme speed","Total memory control","Portable & universal"], cons:["Manual memory management","Unsafe if careless","No modern abstractions"] }
+  },
+  {
+    name:"C++", year:1985, icon:"➕", color:"#00599c", fame:"popular", popularity:85,
+    categories:["sistemas"], creator:"Bjarne Stroustrup",
+    extensions:[".cpp",".cc",".cxx",".hpp",".h"],
+    example:`#include <iostream>\nint main() {\n  std::cout << "¡Hola, mundo!\\n";\n}`,
+    es:{ desc:"C con objetos y mucho más. Potencia bruta para juegos y motores.",
+      fullDesc:"C++ amplía C con orientación a objetos, plantillas y abstracciones de coste cero. Es la elección para motores de videojuegos, software de alto rendimiento, navegadores y sistemas críticos donde cada microsegundo cuenta.",
+      paradigm:"Multiparadigma · compilado", uses:["Motores de videojuegos","Software de alto rendimiento","Sistemas embebidos"],
+      pros:["Rendimiento máximo","Control de bajo nivel","Muy potente"], cons:["Curva de aprendizaje dura","Complejo y extenso","Fácil cometer errores"] },
+    en:{ desc:"C with objects and much more. Raw power for games and engines.",
+      fullDesc:"C++ extends C with object orientation, templates and zero-cost abstractions. It's the choice for game engines, high-performance software, browsers and critical systems where every microsecond counts.",
+      paradigm:"Multi-paradigm · compiled", uses:["Game engines","High-performance software","Embedded systems"],
+      pros:["Top performance","Low-level control","Very powerful"], cons:["Steep learning curve","Complex & vast","Easy to make mistakes"] }
+  },
+  {
+    name:"C#", year:2000, icon:"#️⃣", color:"#9b4f96", fame:"popular", popularity:84,
+    categories:["sistemas","web","movil"], creator:"Anders Hejlsberg (Microsoft)",
+    extensions:[".cs",".csx"],
+    example:`using System;\nConsole.WriteLine("¡Hola, mundo!");`,
+    es:{ desc:"El lenguaje moderno de Microsoft. Potente para web, juegos y escritorio.",
+      fullDesc:"C# combina la robustez de Java con una sintaxis moderna y elegante. Es el corazón del ecosistema .NET, motor de juegos Unity, apps de escritorio Windows y backend web con ASP.NET.",
+      paradigm:"Orientado a objetos · compilado", uses:["Juegos con Unity","Backend .NET","Apps de escritorio"],
+      pros:["Lenguaje muy moderno","Gran ecosistema .NET","Excelente tooling"], cons:["Ligado a Microsoft","Más pesado que algunos","Menos popular en Linux"] },
+    en:{ desc:"Microsoft's modern language. Powerful for web, games and desktop.",
+      fullDesc:"C# combines Java's robustness with a modern, elegant syntax. It's the heart of the .NET ecosystem, the Unity game engine, Windows desktop apps and web backends with ASP.NET.",
+      paradigm:"Object-oriented · compiled", uses:["Unity games","'.NET' backend","Desktop apps"],
+      pros:["Very modern language","Great .NET ecosystem","Excellent tooling"], cons:["Tied to Microsoft","Heavier than some","Less popular on Linux"] }
+  },
+  {
+    name:"TypeScript", year:2012, icon:"🔷", color:"#3178c6", fame:"top", popularity:91,
+    categories:["web","scripting"], creator:"Anders Hejlsberg (Microsoft)",
+    extensions:[".ts",".tsx",".d.ts"],
+    example:`const saludo: string = "¡Hola, mundo!";\nconsole.log(saludo);`,
+    es:{ desc:"JavaScript con tipos. Escala proyectos grandes sin perder la cabeza.",
+      fullDesc:"TypeScript añade tipado estático opcional a JavaScript y compila a JS puro. Detecta errores antes de ejecutar y hace mantenibles las bases de código grandes. Hoy es el estándar de facto en el frontend profesional.",
+      paradigm:"Multiparadigma · transpilado", uses:["Frontend a gran escala","Backend con Node","Librerías tipadas"],
+      pros:["Tipado estático seguro","Mejor autocompletado","Escala muy bien"], cons:["Requiere compilación","Configuración inicial","Tipos complejos a veces"] },
+    en:{ desc:"JavaScript with types. Scales big projects without losing your mind.",
+      fullDesc:"TypeScript adds optional static typing to JavaScript and compiles to plain JS. It catches errors before runtime and makes large codebases maintainable. It's now the de facto standard in professional frontend.",
+      paradigm:"Multi-paradigm · transpiled", uses:["Large-scale frontend","Node backend","Typed libraries"],
+      pros:["Safe static typing","Better autocomplete","Scales very well"], cons:["Needs compilation","Initial setup","Complex types sometimes"] }
+  },
+  {
+    name:"Rust", year:2010, icon:"🦀", color:"#dea584", fame:"popular", popularity:80,
+    categories:["sistemas"], creator:"Graydon Hoare (Mozilla)",
+    extensions:[".rs",".rlib"],
+    example:`fn main() {\n    println!("¡Hola, mundo!");\n}`,
+    es:{ desc:"Seguridad de memoria sin recolector de basura. El favorito de los devs.",
+      fullDesc:"Rust ofrece el rendimiento de C++ con garantías de seguridad de memoria en tiempo de compilación gracias a su sistema de propiedad (ownership). Sin recolector de basura y sin segfaults. Elegido el lenguaje más querido año tras año.",
+      paradigm:"Multiparadigma · compilado", uses:["Sistemas seguros","WebAssembly","Herramientas CLI"],
+      pros:["Seguridad de memoria","Rendimiento de C++","Sin garbage collector"], cons:["Curva de aprendizaje","Compilación lenta","Borrow checker estricto"] },
+    en:{ desc:"Memory safety without a garbage collector. Developers' favorite.",
+      fullDesc:"Rust offers C++ performance with compile-time memory safety guarantees thanks to its ownership system. No garbage collector and no segfaults. Voted the most loved language year after year.",
+      paradigm:"Multi-paradigm · compiled", uses:["Safe systems","WebAssembly","CLI tools"],
+      pros:["Memory safety","C++ performance","No garbage collector"], cons:["Learning curve","Slow compilation","Strict borrow checker"] }
+  },
+  {
+    name:"Go", year:2009, icon:"🐹", color:"#00add8", fame:"popular", popularity:83,
+    categories:["sistemas","web"], creator:"Google (Pike, Thompson, Griesemer)",
+    extensions:[".go"],
+    example:`package main\nimport "fmt"\nfunc main() {\n    fmt.Println("¡Hola, mundo!")\n}`,
+    es:{ desc:"Simple, rápido y concurrente. Diseñado por Google para la nube.",
+      fullDesc:"Go (Golang) busca la simplicidad y la velocidad de compilación. Su concurrencia con goroutines es elegante y ligera, ideal para microservicios, infraestructura cloud y herramientas de red. Docker y Kubernetes están escritos en Go.",
+      paradigm:"Procedural · compilado", uses:["Microservicios","Infraestructura cloud","Herramientas de red"],
+      pros:["Muy simple de aprender","Concurrencia excelente","Compilación rapidísima"], cons:["Sin genéricos (hasta 1.18)","Manejo de errores verboso","Poco expresivo"] },
+    en:{ desc:"Simple, fast and concurrent. Designed by Google for the cloud.",
+      fullDesc:"Go (Golang) aims for simplicity and compile speed. Its concurrency via goroutines is elegant and lightweight, ideal for microservices, cloud infrastructure and network tools. Docker and Kubernetes are written in Go.",
+      paradigm:"Procedural · compiled", uses:["Microservices","Cloud infrastructure","Network tools"],
+      pros:["Very simple to learn","Excellent concurrency","Blazing fast compile"], cons:["No generics (until 1.18)","Verbose error handling","Not very expressive"] }
+  },
+  {
+    name:"PHP", year:1995, icon:"🐘", color:"#777bb4", fame:"popular", popularity:78,
+    categories:["web"], creator:"Rasmus Lerdorf",
+    extensions:[".php",".phtml",".php3",".phar"],
+    example:`<?php\necho "¡Hola, mundo!";\n?>`,
+    es:{ desc:"El veterano de la web. Sigue moviendo gran parte de internet.",
+      fullDesc:"PHP fue diseñado específicamente para la web y aún potencia el 70% de los sitios, incluido WordPress. Versiones modernas (PHP 8+) son rápidas y han mejorado mucho. Pragmático y omnipresente en hosting compartido.",
+      paradigm:"Multiparadigma · interpretado", uses:["Sitios web dinámicos","WordPress / CMS","Backend con Laravel"],
+      pros:["Fácil de desplegar","Hosting barato y universal","Enorme base instalada"], cons:["Inconsistencias históricas","Mala reputación","Tipado débil"] },
+    en:{ desc:"The web veteran. Still powers a huge chunk of the internet.",
+      fullDesc:"PHP was designed specifically for the web and still powers 70% of sites, including WordPress. Modern versions (PHP 8+) are fast and much improved. Pragmatic and ubiquitous on shared hosting.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Dynamic websites","WordPress / CMS","Backend with Laravel"],
+      pros:["Easy to deploy","Cheap, universal hosting","Huge installed base"], cons:["Historical inconsistencies","Bad reputation","Weak typing"] }
+  },
+  {
+    name:"Swift", year:2014, icon:"🕊️", color:"#fa7343", fame:"popular", popularity:77,
+    categories:["movil","sistemas"], creator:"Chris Lattner (Apple)",
+    extensions:[".swift"],
+    example:`print("¡Hola, mundo!")`,
+    es:{ desc:"El lenguaje moderno de Apple para iOS, macOS y todo su ecosistema.",
+      fullDesc:"Swift reemplazó a Objective-C como lenguaje principal de Apple. Es seguro, rápido y expresivo, con sintaxis limpia. Es la elección obligada para apps de iPhone, iPad, Mac, Apple Watch y Apple TV.",
+      paradigm:"Multiparadigma · compilado", uses:["Apps de iOS","Apps de macOS","Ecosistema Apple"],
+      pros:["Moderno y seguro","Sintaxis limpia","Rendimiento alto"], cons:["Ligado a Apple","Cambios entre versiones","Fuera de Apple es raro"] },
+    en:{ desc:"Apple's modern language for iOS, macOS and its entire ecosystem.",
+      fullDesc:"Swift replaced Objective-C as Apple's primary language. It's safe, fast and expressive, with clean syntax. It's the mandatory choice for iPhone, iPad, Mac, Apple Watch and Apple TV apps.",
+      paradigm:"Multi-paradigm · compiled", uses:["iOS apps","macOS apps","Apple ecosystem"],
+      pros:["Modern and safe","Clean syntax","High performance"], cons:["Tied to Apple","Cross-version changes","Rare outside Apple"] }
+  },
+  {
+    name:"Kotlin", year:2011, icon:"🟪", color:"#7f52ff", fame:"popular", popularity:76,
+    categories:["movil","web","sistemas"], creator:"JetBrains",
+    extensions:[".kt",".kts"],
+    example:`fun main() {\n    println("¡Hola, mundo!")\n}`,
+    es:{ desc:"Java moderno y conciso. Lenguaje oficial para Android.",
+      fullDesc:"Kotlin corre sobre la JVM y es 100% interoperable con Java, pero con una sintaxis mucho más concisa y segura frente a nulos. Google lo declaró lenguaje preferido para Android. También sirve para backend y multiplataforma.",
+      paradigm:"Multiparadigma · compilado a bytecode", uses:["Apps Android","Backend con Ktor","Multiplataforma"],
+      pros:["Conciso y seguro","Interopera con Java","Null safety nativa"], cons:["Compilación más lenta","Menos recursos que Java","Ligado a la JVM"] },
+    en:{ desc:"Modern, concise Java. The official language for Android.",
+      fullDesc:"Kotlin runs on the JVM and is 100% interoperable with Java, but with a far more concise and null-safe syntax. Google made it the preferred language for Android. It also works for backend and multiplatform.",
+      paradigm:"Multi-paradigm · compiled to bytecode", uses:["Android apps","Backend with Ktor","Multiplatform"],
+      pros:["Concise and safe","Interops with Java","Native null safety"], cons:["Slower compilation","Fewer resources than Java","Tied to the JVM"] }
+  },
+  {
+    name:"R", year:1993, icon:"📊", color:"#276dc3", fame:"medium", popularity:64,
+    categories:["datos","cientifico"], creator:"Ross Ihaka & Robert Gentleman",
+    extensions:[".r",".rdata",".rds",".rmd"],
+    example:`cat("¡Hola, mundo!\\n")`,
+    es:{ desc:"Estadística y visualización de datos en estado puro.",
+      fullDesc:"R fue creado por y para estadísticos. Brilla en análisis estadístico, gráficos avanzados (ggplot2) y bioinformática. Es el estándar en investigación académica y ciencia de datos orientada a estadística.",
+      paradigm:"Multiparadigma · interpretado", uses:["Análisis estadístico","Visualización de datos","Investigación científica"],
+      pros:["Estadística potentísima","Gráficos excelentes","Miles de paquetes (CRAN)"], cons:["Sintaxis peculiar","Lento con datos grandes","Curva fuera de stats"] },
+    en:{ desc:"Statistics and data visualization in their purest form.",
+      fullDesc:"R was created by and for statisticians. It shines in statistical analysis, advanced graphics (ggplot2) and bioinformatics. It's the standard in academic research and statistics-focused data science.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Statistical analysis","Data visualization","Scientific research"],
+      pros:["Powerful statistics","Excellent graphics","Thousands of packages (CRAN)"], cons:["Quirky syntax","Slow with big data","Steep outside stats"] }
+  },
+  {
+    name:"SQL", year:1974, icon:"🗄️", color:"#e38c00", fame:"top", popularity:88,
+    categories:["datos"], creator:"Chamberlin & Boyce (IBM)",
+    extensions:[".sql"],
+    example:`SELECT '¡Hola, mundo!' AS saludo;`,
+    es:{ desc:"El idioma de las bases de datos. Imprescindible para cualquier dev de datos.",
+      fullDesc:"SQL (Structured Query Language) es el estándar para consultar y manipular bases de datos relacionales. No es de propósito general, pero es universal: MySQL, PostgreSQL, SQLite, SQL Server y Oracle lo hablan. Indispensable en datos.",
+      paradigm:"Declarativo · de consulta", uses:["Consultas a bases de datos","Análisis de datos","Reportes y ETL"],
+      pros:["Universal en datos","Declarativo y conciso","Muy maduro"], cons:["No es de propósito general","Dialectos distintos","Limitado en lógica"] },
+    en:{ desc:"The language of databases. Essential for any data developer.",
+      fullDesc:"SQL (Structured Query Language) is the standard for querying and manipulating relational databases. It's not general-purpose, but it's universal: MySQL, PostgreSQL, SQLite, SQL Server and Oracle all speak it. Indispensable for data work.",
+      paradigm:"Declarative · query", uses:["Database queries","Data analysis","Reporting & ETL"],
+      pros:["Universal for data","Declarative and concise","Very mature"], cons:["Not general-purpose","Different dialects","Limited logic"] }
+  },
+  {
+    name:"Ruby", year:1995, icon:"💎", color:"#cc342d", fame:"medium", popularity:68,
+    categories:["web","scripting"], creator:"Yukihiro Matsumoto",
+    extensions:[".rb",".erb",".gemspec"],
+    example:`puts "¡Hola, mundo!"`,
+    es:{ desc:"Elegante y centrado en la felicidad del programador.",
+      fullDesc:"Ruby fue diseñado para ser agradable y natural de escribir. Su framework Ruby on Rails revolucionó el desarrollo web ágil y popularizó muchas convenciones modernas. Expresivo, dinámico y muy legible.",
+      paradigm:"Orientado a objetos · interpretado", uses:["Desarrollo web (Rails)","Prototipado rápido","Scripting"],
+      pros:["Sintaxis muy elegante","Productividad alta","Rails maduro"], cons:["Rendimiento limitado","Menos popular hoy","Concurrencia floja"] },
+    en:{ desc:"Elegant and focused on programmer happiness.",
+      fullDesc:"Ruby was designed to be pleasant and natural to write. Its Ruby on Rails framework revolutionized agile web development and popularized many modern conventions. Expressive, dynamic and very readable.",
+      paradigm:"Object-oriented · interpreted", uses:["Web development (Rails)","Rapid prototyping","Scripting"],
+      pros:["Very elegant syntax","High productivity","Mature Rails"], cons:["Limited performance","Less popular today","Weak concurrency"] }
+  },
+  {
+    name:"Scala", year:2004, icon:"🔺", color:"#dc322f", fame:"niche", popularity:55,
+    categories:["funcional","datos","sistemas"], creator:"Martin Odersky",
+    extensions:[".scala",".sc"],
+    example:`@main def hola() = println("¡Hola, mundo!")`,
+    es:{ desc:"Fusiona programación funcional y orientada a objetos sobre la JVM.",
+      fullDesc:"Scala combina el paradigma funcional con el orientado a objetos de forma elegante, corriendo sobre la JVM. Es muy usado en big data (Apache Spark está escrito en Scala) y sistemas concurrentes de gran escala.",
+      paradigm:"Funcional + OO · compilado a bytecode", uses:["Big data (Spark)","Sistemas concurrentes","Backend funcional"],
+      pros:["Funcional y OO a la vez","Potente y expresivo","Interopera con Java"], cons:["Curva muy empinada","Compilación lenta","Complejo de dominar"] },
+    en:{ desc:"Fuses functional and object-oriented programming on the JVM.",
+      fullDesc:"Scala elegantly blends the functional paradigm with object orientation, running on the JVM. It's widely used in big data (Apache Spark is written in Scala) and large-scale concurrent systems.",
+      paradigm:"Functional + OO · compiled to bytecode", uses:["Big data (Spark)","Concurrent systems","Functional backend"],
+      pros:["Functional and OO at once","Powerful and expressive","Interops with Java"], cons:["Very steep curve","Slow compilation","Hard to master"] }
+  },
+  {
+    name:"Haskell", year:1990, icon:"λ", color:"#5e5086", fame:"niche", popularity:48,
+    categories:["funcional","cientifico"], creator:"Comité Haskell",
+    extensions:[".hs",".lhs"],
+    example:`main :: IO ()\nmain = putStrLn "¡Hola, mundo!"`,
+    es:{ desc:"Programación funcional pura. Académico, elegante y matemático.",
+      fullDesc:"Haskell es el lenguaje funcional puro por excelencia: sin efectos secundarios, con evaluación perezosa y un sistema de tipos potentísimo. Muy usado en investigación, finanzas y compiladores. Exige cambiar tu forma de pensar.",
+      paradigm:"Funcional puro · compilado", uses:["Investigación académica","Sistemas financieros","Compiladores"],
+      pros:["Funcional puro y elegante","Sistema de tipos potente","Código muy seguro"], cons:["Curva muy dura","Evaluación perezosa confunde","Poco práctico para iniciar"] },
+    en:{ desc:"Pure functional programming. Academic, elegant and mathematical.",
+      fullDesc:"Haskell is the pure functional language par excellence: no side effects, lazy evaluation and an extremely powerful type system. Widely used in research, finance and compilers. It demands you change how you think.",
+      paradigm:"Pure functional · compiled", uses:["Academic research","Financial systems","Compilers"],
+      pros:["Pure, elegant functional","Powerful type system","Very safe code"], cons:["Very hard curve","Lazy evaluation confuses","Impractical to start"] }
+  },
+  {
+    name:"Lua", year:1993, icon:"🌙", color:"#2c2d72", fame:"niche", popularity:58,
+    categories:["scripting","educativo"], creator:"Tecgraf (PUC-Rio)",
+    extensions:[".lua"],
+    example:`print("¡Hola, mundo!")`,
+    es:{ desc:"Ligero y embebible. Rey del scripting en videojuegos.",
+      fullDesc:"Lua es un lenguaje minúsculo, rápido y fácil de embeber en otras aplicaciones. Es el favorito para scripting de videojuegos (Roblox, World of Warcraft), software embebido y configuraciones. Pequeño pero muy capaz.",
+      paradigm:"Multiparadigma · interpretado", uses:["Scripting de videojuegos","Software embebido","Configuración y plugins"],
+      pros:["Muy ligero y rápido","Fácil de embeber","Sencillo de aprender"], cons:["Librería estándar pequeña","Índices empiezan en 1","Ecosistema limitado"] },
+    en:{ desc:"Lightweight and embeddable. King of game scripting.",
+      fullDesc:"Lua is a tiny, fast language that's easy to embed in other applications. It's the favorite for game scripting (Roblox, World of Warcraft), embedded software and configuration. Small but very capable.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Game scripting","Embedded software","Config & plugins"],
+      pros:["Very light and fast","Easy to embed","Simple to learn"], cons:["Small standard library","Indices start at 1","Limited ecosystem"] }
+  },
+  {
+    name:"Perl", year:1987, icon:"🐪", color:"#39457e", fame:"niche", popularity:45,
+    categories:["scripting"], creator:"Larry Wall",
+    extensions:[".pl",".pm",".t",".pod"],
+    example:`print "¡Hola, mundo!\\n";`,
+    es:{ desc:"La navaja suiza del procesamiento de texto y la administración.",
+      fullDesc:"Perl fue durante décadas el rey del scripting y el procesamiento de texto con expresiones regulares. Flexible hasta el extremo (\"hay más de una forma de hacerlo\"). Hoy es nicho, pero sigue vivo en sysadmin y bioinformática.",
+      paradigm:"Multiparadigma · interpretado", uses:["Procesamiento de texto","Administración de sistemas","Bioinformática"],
+      pros:["Regex insuperables","Muy flexible","Potente para texto"], cons:["Código difícil de leer","En declive","Sintaxis críptica"] },
+    en:{ desc:"The Swiss Army knife of text processing and administration.",
+      fullDesc:"Perl was for decades the king of scripting and text processing with regular expressions. Flexible to the extreme (\"there's more than one way to do it\"). Now niche, but still alive in sysadmin and bioinformatics.",
+      paradigm:"Multi-paradigm · interpreted", uses:["Text processing","System administration","Bioinformatics"],
+      pros:["Unbeatable regex","Very flexible","Powerful for text"], cons:["Hard to read code","In decline","Cryptic syntax"] }
+  },
+  {
+    name:"Assembly", year:1947, icon:"⚙️", color:"#6e4c13", fame:"niche", popularity:40,
+    categories:["sistemas","educativo"], creator:"Kathleen Booth (concepto)",
+    extensions:[".asm",".s",".a51",".inc"],
+    example:`section .data\n  msg db "¡Hola, mundo!",0\nsection .text\n  global _start`,
+    es:{ desc:"El lenguaje más cercano al hardware. Instrucciones de la CPU en crudo.",
+      fullDesc:"El ensamblador (ASM) es la representación legible de las instrucciones máquina que ejecuta directamente la CPU. Es específico de cada arquitectura (x86, ARM). Se usa donde el control absoluto y el rendimiento extremo son críticos.",
+      paradigm:"Bajo nivel · ensamblado", uses:["Sistemas embebidos","Optimización crítica","Ingeniería inversa"],
+      pros:["Control total del hardware","Rendimiento máximo absoluto","Sin abstracciones"], cons:["Extremadamente tedioso","No portable","Muy propenso a errores"] },
+    en:{ desc:"The language closest to the hardware. Raw CPU instructions.",
+      fullDesc:"Assembly (ASM) is the human-readable representation of the machine instructions the CPU executes directly. It's specific to each architecture (x86, ARM). Used where absolute control and extreme performance are critical.",
+      paradigm:"Low-level · assembled", uses:["Embedded systems","Critical optimization","Reverse engineering"],
+      pros:["Total hardware control","Absolute max performance","No abstractions"], cons:["Extremely tedious","Not portable","Very error-prone"] }
+  },
+  {
+    name:"MATLAB", year:1984, icon:"📐", color:"#e16737", fame:"medium", popularity:60,
+    categories:["cientifico","datos"], creator:"Cleve Moler (MathWorks)",
+    extensions:[".m",".mat",".mlx",".fig"],
+    example:`disp('¡Hola, mundo!')`,
+    es:{ desc:"Computación numérica y matricial para ingeniería y ciencia.",
+      fullDesc:"MATLAB (Matrix Laboratory) está diseñado para cálculo numérico, álgebra matricial, simulación y procesamiento de señales. Es estándar en ingeniería, control y academia. Comercial y de pago, pero muy potente en su nicho.",
+      paradigm:"Imperativo · interpretado", uses:["Ingeniería y simulación","Procesamiento de señales","Cálculo matricial"],
+      pros:["Excelente para matrices","Toolboxes potentes","Estándar en ingeniería"], cons:["Caro (licencia)","Cerrado y propietario","Lento fuera de su nicho"] },
+    en:{ desc:"Numerical and matrix computing for engineering and science.",
+      fullDesc:"MATLAB (Matrix Laboratory) is designed for numerical computing, matrix algebra, simulation and signal processing. It's standard in engineering, control and academia. Commercial and paid, but very powerful in its niche.",
+      paradigm:"Imperative · interpreted", uses:["Engineering & simulation","Signal processing","Matrix computing"],
+      pros:["Excellent for matrices","Powerful toolboxes","Engineering standard"], cons:["Expensive (license)","Closed and proprietary","Slow outside its niche"] }
+  },
+  {
+    name:"Dart", year:2011, icon:"🎯", color:"#0175c2", fame:"medium", popularity:66,
+    categories:["movil","web"], creator:"Google",
+    extensions:[".dart"],
+    example:`void main() {\n  print('¡Hola, mundo!');\n}`,
+    es:{ desc:"El lenguaje de Flutter para apps multiplataforma desde un solo código.",
+      fullDesc:"Dart fue impulsado por Google y es el lenguaje de Flutter, el framework para crear apps de móvil, web y escritorio desde una sola base de código. Moderno, tipado y optimizado para interfaces fluidas.",
+      paradigm:"Orientado a objetos · compilado/JIT", uses:["Apps con Flutter","Multiplataforma","Frontend web"],
+      pros:["Multiplataforma con Flutter","Moderno y tipado","Hot reload"], cons:["Casi solo se usa con Flutter","Ecosistema acotado","Dependencia de Google"] },
+    en:{ desc:"Flutter's language for cross-platform apps from a single codebase.",
+      fullDesc:"Dart was pushed by Google and is the language of Flutter, the framework for building mobile, web and desktop apps from a single codebase. Modern, typed and optimized for smooth interfaces.",
+      paradigm:"Object-oriented · compiled/JIT", uses:["Flutter apps","Cross-platform","Web frontend"],
+      pros:["Cross-platform with Flutter","Modern and typed","Hot reload"], cons:["Mostly only used with Flutter","Limited ecosystem","Google dependency"] }
+  },
+  {
+    name:"Fortran", year:1957, icon:"🧮", color:"#734f96", fame:"niche", popularity:38,
+    categories:["cientifico"], creator:"John Backus (IBM)",
+    extensions:[".f",".f90",".f95",".for"],
+    example:`program hola\n  print *, "¡Hola, mundo!"\nend program hola`,
+    es:{ desc:"El abuelo de los lenguajes de alto nivel. Aún reina en cálculo científico.",
+      fullDesc:"Fortran (Formula Translation) fue el primer lenguaje de alto nivel exitoso. Diseñado para cálculo numérico intensivo, sigue siendo insuperable en simulaciones científicas, meteorología y supercomputación. Más vivo de lo que crees.",
+      paradigm:"Imperativo · compilado", uses:["Cálculo científico","Simulaciones numéricas","Supercomputación"],
+      pros:["Rapidísimo en números","Décadas de bibliotecas","Estándar en HPC"], cons:["Sintaxis anticuada","Pocos programadores jóvenes","Poco versátil"] },
+    en:{ desc:"The grandfather of high-level languages. Still reigns in scientific computing.",
+      fullDesc:"Fortran (Formula Translation) was the first successful high-level language. Designed for intensive numerical computing, it remains unbeatable in scientific simulations, weather modeling and supercomputing. More alive than you'd think.",
+      paradigm:"Imperative · compiled", uses:["Scientific computing","Numerical simulations","Supercomputing"],
+      pros:["Blazing fast at numbers","Decades of libraries","HPC standard"], cons:["Dated syntax","Few young programmers","Not very versatile"] }
+  },
+  {
+    name:"Elixir", year:2011, icon:"💧", color:"#6e4a7e", fame:"niche", popularity:54,
+    categories:["funcional","web"], creator:"José Valim",
+    extensions:[".ex",".exs"],
+    example:`IO.puts("¡Hola, mundo!")`,
+    es:{ desc:"Funcional, concurrente y tolerante a fallos sobre la máquina de Erlang.",
+      fullDesc:"Elixir corre sobre la BEAM (máquina virtual de Erlang) y hereda su legendaria capacidad de concurrencia y tolerancia a fallos. Con el framework Phoenix brilla en sistemas en tiempo real, mensajería y aplicaciones que no pueden caerse.",
+      paradigm:"Funcional · interpretado/compilado", uses:["Sistemas en tiempo real","Aplicaciones web (Phoenix)","Sistemas distribuidos"],
+      pros:["Concurrencia masiva","Tolerante a fallos","Sintaxis agradable"], cons:["Nicho pequeño","Paradigma funcional exige","Menos librerías"] },
+    en:{ desc:"Functional, concurrent and fault-tolerant on Erlang's VM.",
+      fullDesc:"Elixir runs on the BEAM (Erlang's virtual machine) and inherits its legendary concurrency and fault tolerance. With the Phoenix framework it shines in real-time systems, messaging and applications that can't go down.",
+      paradigm:"Functional · interpreted/compiled", uses:["Real-time systems","Web apps (Phoenix)","Distributed systems"],
+      pros:["Massive concurrency","Fault-tolerant","Pleasant syntax"], cons:["Small niche","Functional paradigm demands","Fewer libraries"] }
+  },
+  {
+    name:"Bash / Shell", year:1989, icon:"🐚", color:"#4eaa25", fame:"popular", popularity:75,
+    categories:["scripting","sistemas"], creator:"Brian Fox (GNU)",
+    extensions:[".sh",".bash",".zsh"],
+    example:`#!/bin/bash\necho "¡Hola, mundo!"`,
+    es:{ desc:"El lenguaje de la terminal. Pega comandos y automatiza el sistema.",
+      fullDesc:"Bash es el intérprete de comandos por defecto en Linux y macOS. Más que un lenguaje, es el pegamento que automatiza tareas del sistema, despliegues y procesos por lotes. Indispensable para cualquier admin o devops.",
+      paradigm:"Scripting de shell · interpretado", uses:["Automatización del sistema","DevOps y despliegues","Procesos por lotes"],
+      pros:["Omnipresente en Unix","Ideal para automatizar","Pega herramientas"], cons:["Sintaxis traicionera","Difícil de depurar","No apto para lógica compleja"] },
+    en:{ desc:"The language of the terminal. Glues commands and automates the system.",
+      fullDesc:"Bash is the default command interpreter on Linux and macOS. More than a language, it's the glue that automates system tasks, deployments and batch processes. Indispensable for any admin or devops.",
+      paradigm:"Shell scripting · interpreted", uses:["System automation","DevOps & deployments","Batch processing"],
+      pros:["Ubiquitous on Unix","Ideal for automation","Glues tools together"], cons:["Treacherous syntax","Hard to debug","Not for complex logic"] }
+  },
+  {
+    name:"Prolog", year:1972, icon:"🧠", color:"#74283c", fame:"niche", popularity:32,
+    categories:["funcional","educativo","cientifico"], creator:"Alain Colmerauer",
+    extensions:[".pl",".pro",".P"],
+    example:`:- initialization(main).\nmain :- write('¡Hola, mundo!'), nl.`,
+    es:{ desc:"Programación lógica. Describes hechos y reglas, no pasos.",
+      fullDesc:"Prolog representa el paradigma de la programación lógica: en lugar de decir cómo resolver algo, declaras hechos y reglas, y el motor deduce las respuestas. Históricamente ligado a la IA simbólica, la lingüística y los sistemas expertos.",
+      paradigm:"Lógico / declarativo · interpretado", uses:["Inteligencia artificial simbólica","Sistemas expertos","Procesamiento de lenguaje"],
+      pros:["Paradigma único y potente","Ideal para reglas","Deducción automática"], cons:["Muy distinto a lo habitual","Nicho académico","Difícil de optimizar"] },
+    en:{ desc:"Logic programming. You describe facts and rules, not steps.",
+      fullDesc:"Prolog embodies the logic programming paradigm: instead of saying how to solve something, you declare facts and rules, and the engine deduces the answers. Historically tied to symbolic AI, linguistics and expert systems.",
+      paradigm:"Logic / declarative · interpreted", uses:["Symbolic AI","Expert systems","Language processing"],
+      pros:["Unique, powerful paradigm","Ideal for rules","Automatic deduction"], cons:["Very different mindset","Academic niche","Hard to optimize"] }
+  },
+  {
+    name:"Scratch", year:2007, icon:"🐱", color:"#f78d00", fame:"medium", popularity:62,
+    categories:["educativo"], creator:"MIT Media Lab",
+    extensions:[".sb",".sb2",".sb3"],
+    example:`al presionar 🏳\n  decir "¡Hola, mundo!" por 2 segundos`,
+    es:{ desc:"Programación por bloques. La puerta de entrada para aprender a programar.",
+      fullDesc:"Scratch, creado por el MIT, enseña los fundamentos de la programación arrastrando bloques visuales en lugar de escribir código. Es la herramienta más usada del mundo para introducir a niños y principiantes a la lógica de programación.",
+      paradigm:"Visual por bloques · interpretado", uses:["Educación infantil","Aprender a programar","Animaciones y juegos simples"],
+      pros:["Ideal para empezar","Sin escribir código","Muy visual y divertido"], cons:["No sirve para producción","Limitado en complejidad","Solo educativo"] },
+    en:{ desc:"Block-based programming. The gateway to learning to code.",
+      fullDesc:"Scratch, created by MIT, teaches programming fundamentals by dragging visual blocks instead of writing code. It's the world's most used tool for introducing children and beginners to programming logic.",
+      paradigm:"Visual block-based · interpreted", uses:["Children's education","Learning to code","Simple animations & games"],
+      pros:["Ideal for beginners","No code writing","Very visual and fun"], cons:["Not for production","Limited complexity","Educational only"] }
+  },
+  {
+    name:"COBOL", year:1959, icon:"🏦", color:"#005ca5", fame:"niche", popularity:35,
+    categories:["sistemas","datos"], creator:"Grace Hopper (CODASYL)",
+    extensions:[".cob",".cbl",".cpy"],
+    example:`IDENTIFICATION DIVISION.\nPROGRAM-ID. HOLA.\nPROCEDURE DIVISION.\n    DISPLAY "¡Hola, mundo!".\n    STOP RUN.`,
+    es:{ desc:"El veterano de los bancos. Aún mueve billones en sistemas legados.",
+      fullDesc:"COBOL (Common Business-Oriented Language) fue diseñado para procesamiento de negocios. Aunque parezca anticuado, sigue ejecutándose en bancos, aseguradoras y gobiernos: una enorme parte de las transacciones financieras mundiales depende de él.",
+      paradigm:"Imperativo · compilado", uses:["Banca y finanzas","Sistemas legados","Procesamiento por lotes"],
+      pros:["Estable y probado","Ideal para negocios","Manejo de datos masivos"], cons:["Sintaxis muy verbosa","Anticuado","Pocos programadores"] },
+    en:{ desc:"The banking veteran. Still moves trillions in legacy systems.",
+      fullDesc:"COBOL (Common Business-Oriented Language) was designed for business processing. Though it seems dated, it still runs in banks, insurers and governments: a huge share of the world's financial transactions depends on it.",
+      paradigm:"Imperative · compiled", uses:["Banking & finance","Legacy systems","Batch processing"],
+      pros:["Stable and proven","Ideal for business","Handles massive data"], cons:["Very verbose syntax","Outdated","Few programmers"] }
+  }
+];
+
+/* ============================================================
+   FUENTES — artículos de Wikipedia por idioma (es / en)
+   ============================================================ */
+const WIKI = {
+  "Python":        { es:"Python", en:"Python_(programming_language)" },
+  "JavaScript":    { es:"JavaScript", en:"JavaScript" },
+  "Java":          { es:"Java_(lenguaje_de_programación)", en:"Java_(programming_language)" },
+  "C":             { es:"C_(lenguaje_de_programación)", en:"C_(programming_language)" },
+  "C++":           { es:"C++", en:"C++" },
+  "C#":            { es:"C_Sharp", en:"C_Sharp_(programming_language)" },
+  "TypeScript":    { es:"TypeScript", en:"TypeScript" },
+  "Rust":          { es:"Rust_(lenguaje_de_programación)", en:"Rust_(programming_language)" },
+  "Go":            { es:"Go_(lenguaje_de_programación)", en:"Go_(programming_language)" },
+  "PHP":           { es:"PHP", en:"PHP" },
+  "Swift":         { es:"Swift_(lenguaje_de_programación)", en:"Swift_(programming_language)" },
+  "Kotlin":        { es:"Kotlin_(lenguaje_de_programación)", en:"Kotlin_(programming_language)" },
+  "R":             { es:"R_(lenguaje_de_programación)", en:"R_(programming_language)" },
+  "SQL":           { es:"SQL", en:"SQL" },
+  "Ruby":          { es:"Ruby", en:"Ruby_(programming_language)" },
+  "Scala":         { es:"Scala_(lenguaje_de_programación)", en:"Scala_(programming_language)" },
+  "Haskell":       { es:"Haskell", en:"Haskell" },
+  "Lua":           { es:"Lua_(lenguaje_de_programación)", en:"Lua_(programming_language)" },
+  "Perl":          { es:"Perl", en:"Perl" },
+  "Assembly":      { es:"Lenguaje_ensamblador", en:"Assembly_language" },
+  "MATLAB":        { es:"MATLAB", en:"MATLAB" },
+  "Dart":          { es:"Dart_(lenguaje_de_programación)", en:"Dart_(programming_language)" },
+  "Fortran":       { es:"Fortran", en:"Fortran" },
+  "Elixir":        { es:"Elixir_(lenguaje_de_programación)", en:"Elixir_(programming_language)" },
+  "Bash / Shell":  { es:"Bash", en:"Bash_(Unix_shell)" },
+  "Prolog":        { es:"Prolog", en:"Prolog" },
+  "Scratch":       { es:"Scratch_(lenguaje_de_programación)", en:"Scratch_(programming_language)" },
+  "COBOL":         { es:"COBOL", en:"COBOL" }
+};
+function wikiUrl(name) {
+  const w = WIKI[name];
+  if (!w) return null;
+  return `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(w[lang])}`;
+}
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let lang = localStorage.getItem('lang') || 'es';
+let activeCat = 'all';
+let query = '';
+const CATS = ['all','web','sistemas','datos','movil','cientifico','scripting','funcional','educativo'];
+
+const $ = s => document.querySelector(s);
+const grid = $('#grid'), filtersEl = $('#filters'), statusText = $('#statusText'), emptyEl = $('#empty');
+
+/* ============================================================
+   TEMA
+   ============================================================ */
+function initTheme() {
+  const saved = localStorage.getItem('theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const theme = saved || (prefersLight ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+}
+$('#themeBtn').addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
+
+/* ============================================================
+   IDIOMA
+   ============================================================ */
+function applyLang() {
+  const t = I18N[lang];
+  document.documentElement.setAttribute('lang', lang);
+  $('#langCode').textContent = lang.toUpperCase();
+  // textos estáticos con data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (t[k] !== undefined) el.innerHTML = t[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.getAttribute('data-i18n-ph');
+    if (t[k]) el.setAttribute('placeholder', t[k]);
+  });
+  renderFilters();
+  render();
+  // si el modal está abierto, re-renderizar con el nuevo idioma
+  if ($('#overlay').classList.contains('open') && openIndex !== null) openModal(openIndex);
+}
+$('#langBtn').addEventListener('click', () => {
+  lang = lang === 'es' ? 'en' : 'es';
+  localStorage.setItem('lang', lang);
+  const btn = $('#langBtn');
+  btn.classList.add('spin');
+  setTimeout(() => btn.classList.remove('spin'), 500);
+  applyLang();
+});
+
+/* ============================================================
+   FILTROS
+   ============================================================ */
+function countFor(cat) {
+  if (cat === 'all') return LANGS.length;
+  return LANGS.filter(l => l.categories.includes(cat)).length;
+}
+function renderFilters() {
+  const t = I18N[lang];
+  filtersEl.innerHTML = CATS.map(c =>
+    `<button class="chip ${c===activeCat?'active':''}" data-cat="${c}">${t.cats[c]} <span class="count">${countFor(c)}</span></button>`
+  ).join('');
+  filtersEl.querySelectorAll('.chip').forEach(ch =>
+    ch.addEventListener('click', () => { activeCat = ch.dataset.cat; renderFilters(); render(); })
+  );
+}
+
+/* ============================================================
+   RENDER DE CARDS
+   ============================================================ */
+function matches(l) {
+  if (activeCat !== 'all' && !l.categories.includes(activeCat)) return false;
+  if (!query) return true;
+  const q = query.toLowerCase();
+  const d = l[lang];
+  const hay = [
+    l.name, l.creator, d.desc, d.fullDesc, d.paradigm,
+    ...d.uses, ...l.extensions, ...l.categories
+  ].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+
+function render() {
+  const t = I18N[lang];
+  const list = LANGS.filter(matches);
+  grid.innerHTML = list.map((l) => {
+    const realIdx = LANGS.indexOf(l);
+    const d = l[lang];
+    return `
+    <article class="card" style="--lang-color:${l.color}" data-idx="${realIdx}" tabindex="0">
+      <div class="card-top">
+        <div class="card-id">
+          <div class="card-icon">${l.icon}</div>
+          <div>
+            <div class="card-name">${l.name}</div>
+            <div class="card-year">${t.m.born} ${l.year}</div>
+          </div>
+        </div>
+        <span class="fame ${l.fame}">${t.fame[l.fame]}</span>
+      </div>
+      <div class="tags">${l.categories.slice(0,3).map(c=>`<span class="tag">${t.cats[c]}</span>`).join('')}</div>
+      <p class="card-desc">${d.desc}</p>
+      <div class="ext-row"><span class="ext-label">${t.extLabel}</span>${l.extensions.slice(0,4).map(e=>`<span class="ext mono">${e}</span>`).join('')}</div>
+      <div class="uses-row">${d.uses.map(u=>`<span class="pill">${u}</span>`).join('')}</div>
+      <div class="card-foot">
+        <a class="wiki-link" href="${wikiUrl(l.name)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+          Wikipedia
+        </a>
+      </div>
+    </article>`;
+  }).join('');
+
+  grid.querySelectorAll('.card').forEach(c => {
+    const idx = +c.dataset.idx;
+    c.addEventListener('click', () => openModal(idx));
+    c.addEventListener('keydown', e => { if (e.key === 'Enter') openModal(idx); });
+  });
+
+  statusText.innerHTML = t.showing(list.length, LANGS.length);
+  emptyEl.classList.toggle('show', list.length === 0);
+  grid.style.display = list.length === 0 ? 'none' : '';
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+let openIndex = null;
+function openModal(idx) {
+  openIndex = idx;
+  const l = LANGS[idx], d = l[lang], t = I18N[lang];
+  const code = l.example
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  $('#modal').style.setProperty('--lang-color', l.color);
+  $('#modal').innerHTML = `
+    <div class="modal-head">
+      <button class="modal-close" id="closeBtn" aria-label="Cerrar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="modal-id">
+        <div class="modal-icon">${l.icon}</div>
+        <div>
+          <h2>${l.name}</h2>
+          <div class="modal-meta">${t.m.born} ${l.year} · ${t.fame[l.fame]}</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="lead">${d.fullDesc}</p>
+
+      <div>
+        <div class="section-title">${t.m.popularity}</div>
+        <div class="popbar"><i id="popfill"></i></div>
+        <div class="pop-num">${l.popularity} / 100</div>
+      </div>
+
+      <div>
+        <div class="section-title">${t.m.extensions}</div>
+        <div class="ext-grid">${l.extensions.map(e=>`<span class="ext mono">${e}</span>`).join('')}</div>
+      </div>
+
+      <div>
+        <div class="section-title">${t.m.uses}</div>
+        <div class="tags">${d.uses.map(u=>`<span class="pill">${u}</span>`).join('')}</div>
+      </div>
+
+      <div>
+        <div class="section-title">${t.m.example}</div>
+        <pre class="code">${code}</pre>
+      </div>
+
+      <div class="twocol">
+        <div>
+          <div class="section-title">${t.m.pros}</div>
+          <ul class="pc-list pros">${d.pros.map(p=>`<li>${p}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="section-title">${t.m.cons}</div>
+          <ul class="pc-list cons">${d.cons.map(c=>`<li>${c}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-box"><div class="k">${t.m.creator}</div><div class="v">${l.creator}</div></div>
+        <div class="info-box"><div class="k">${t.m.paradigm}</div><div class="v">${d.paradigm}</div></div>
+      </div>
+
+      <div>
+        <div class="section-title">${t.m.source}</div>
+        <a class="wiki-link" href="${wikiUrl(l.name)}" target="_blank" rel="noopener" style="font-size:.85rem">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+          ${t.source} · Wikipedia (${lang.toUpperCase()})
+        </a>
+      </div>
+    </div>`;
+
+  $('#overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  $('#closeBtn').addEventListener('click', closeModal);
+  requestAnimationFrame(() => { $('#popfill').style.width = l.popularity + '%'; });
+}
+function closeModal() {
+  $('#overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  openIndex = null;
+}
+$('#overlay').addEventListener('click', e => { if (e.target === $('#overlay')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   BÚSQUEDA + atajos
+   ============================================================ */
+$('#search').addEventListener('input', e => { query = e.target.value.trim(); render(); });
+$('#resetBtn').addEventListener('click', () => {
+  query = ''; activeCat = 'all'; $('#search').value = '';
+  renderFilters(); render();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#search')) {
+    e.preventDefault(); $('#search').focus();
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+initTheme();
+applyLang();
+</script>
+
+<!--
+  DEPLOY EN GITHUB PAGES:
+  1. Crear repositorio nuevo en GitHub (ej. "lenghist")
+  2. Subir este index.html al repo
+  3. Ir a Settings > Pages > Source: Deploy from branch > main > / (root)
+  4. URL resultante: https://tuusuario.github.io/lenghist
+-->
+</body>
+</html>
