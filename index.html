@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lenghist — Guía de Lenguajes de Programación</title>
 <meta name="description" content="Lenghist: guía interactiva de lenguajes de programación, su historia, para qué sirven y sus extensiones de archivo.">
+<meta name="author" content="Munir Torres">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://mun1to.github.io/lenghist/">
+<!-- Favicon SVG inline (sin archivos externos) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%236366f1'/%3E%3Ctext%20x='16'%20y='22'%20font-family='monospace'%20font-size='14'%20font-weight='bold'%20fill='white'%20text-anchor='middle'%3E%26lt;/%26gt;%3C/text%3E%3C/svg%3E">
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lenghist">
+<meta property="og:title" content="Lenghist — Guía de Lenguajes de Programación">
+<meta property="og:description" content="28 lenguajes de programación: su historia, usos, paradigmas y extensiones. Interactivo, bilingüe y con modo claro/oscuro.">
+<meta property="og:url" content="https://mun1to.github.io/lenghist/">
+<meta property="og:image" content="https://mun1to.github.io/lenghist/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lenghist — Guía de Lenguajes de Programación">
+<meta name="twitter:description" content="28 lenguajes de programación: historia, usos, paradigmas y extensiones. Interactivo y bilingüe.">
+<meta name="twitter:image" content="https://mun1to.github.io/lenghist/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -403,6 +422,171 @@
   }
   .logo .tag { display: none; }
   @media (min-width: 520px) { .logo .tag { display: block; } }
+
+  /* ============================================================
+     EXTRAS: favoritos, comparador, timeline, quiz, nav modal
+     ============================================================ */
+  .iconbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .iconbtn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+  .iconbtn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+  /* transición suave de tema (View Transitions API) */
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .35s; }
+
+  /* chip de favoritos */
+  .chip.fav-chip.active { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 4px 14px rgba(245,158,11,.25); }
+
+  /* lado derecho de la card: estrella + fame */
+  .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 0 auto; }
+  .fav-btn {
+    background: none; border: none; cursor: pointer; padding: 2px; line-height: 0;
+    color: var(--text-faint); transition: color .18s, transform .15s;
+  }
+  .fav-btn:hover { color: #f59e0b; transform: scale(1.15); }
+  .fav-btn.on { color: #f59e0b; }
+  .fav-btn.on svg { fill: #f59e0b; }
+
+  /* pie de card con wiki + comparar */
+  .card-foot { margin-top: auto; padding-top: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cmp-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim);
+    font-family: inherit; font-size: .72rem; font-weight: 600; cursor: pointer;
+    padding: 3px 9px; border-radius: 7px; transition: all .18s;
+  }
+  .cmp-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .cmp-btn.on { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent-hover); }
+
+  /* hero: botón de quiz */
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .quiz-cta {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    color: var(--accent-hover); font-family: inherit; font-weight: 600; font-size: .9rem;
+    padding: 10px 16px; border-radius: 11px; cursor: pointer;
+    transition: all .2s;
+  }
+  .quiz-cta:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); transform: translateY(-1px); }
+
+  /* ===== TIMELINE ===== */
+  .timeline { display: none; padding: 8px 0 80px; position: relative; }
+  .timeline::before {
+    content: ""; position: absolute; left: 76px; top: 0; bottom: 80px; width: 2px;
+    background: linear-gradient(var(--border), transparent);
+  }
+  @media (max-width: 560px) { .timeline::before { left: 52px; } }
+  .tl-item {
+    display: grid; grid-template-columns: 60px 24px 1fr; align-items: center; gap: 0;
+    width: 100%; background: none; border: none; cursor: pointer; text-align: left;
+    padding: 7px 0; font-family: inherit; color: inherit;
+    animation: cardIn .4s ease both;
+  }
+  @media (max-width: 560px) { .tl-item { grid-template-columns: 44px 18px 1fr; } }
+  .tl-year { font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: var(--text-faint); font-weight: 600; }
+  .tl-dot {
+    width: 12px; height: 12px; border-radius: 50%; justify-self: center;
+    background: var(--bg); border: 2px solid var(--lang-color, var(--accent));
+    transition: transform .18s, box-shadow .18s;
+  }
+  .tl-card {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--lang-color, var(--accent));
+    border-radius: 11px; padding: 11px 14px; transition: border-color .18s, transform .18s;
+  }
+  .tl-item:hover .tl-card { transform: translateX(4px); border-color: var(--border-strong); }
+  .tl-item:hover .tl-dot { transform: scale(1.3); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .tl-icon { font-size: 1.3rem; }
+  .tl-name { font-weight: 700; font-size: .96rem; }
+  .tl-desc { font-size: .8rem; color: var(--text-dim); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* ===== COMPARE TRAY ===== */
+  .compare-tray {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(14px); border-top: 1px solid var(--border);
+    transform: translateY(110%); transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .compare-tray.show { transform: none; }
+  .tray-inner { display: flex; align-items: center; gap: 14px; padding: 12px 24px; flex-wrap: wrap; }
+  .tray-items { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .tray-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--lang-color, var(--accent));
+    border-radius: 9px; padding: 5px 8px 5px 10px; font-size: .82rem; font-weight: 600;
+  }
+  .tray-chip button { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: .9rem; line-height: 1; padding: 0 2px; }
+  .tray-chip button:hover { color: var(--bad); }
+  .tray-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+
+  /* ===== SEGUNDO OVERLAY (compare / quiz) ===== */
+  .overlay2 {
+    position: fixed; inset: 0; z-index: 110;
+    background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 40px 20px; overflow-y: auto;
+    opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s;
+  }
+  .overlay2.open { opacity: 1; visibility: visible; }
+  .modal2 {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    max-width: 860px; width: 100%; box-shadow: var(--shadow);
+    transform: translateY(16px) scale(.98); opacity: 0;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .25s;
+  }
+  .overlay2.open .modal2 { transform: none; opacity: 1; }
+
+  /* tabla comparativa */
+  .cmp-wrap { overflow-x: auto; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: .86rem; }
+  table.cmp th, table.cmp td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cmp thead th { position: sticky; top: 0; background: var(--surface); }
+  table.cmp .cmp-lang { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: .98rem; }
+  table.cmp .cmp-lang .ic { font-size: 1.3rem; }
+  table.cmp .row-k { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); font-weight: 700; white-space: nowrap; }
+  table.cmp tbody tr:hover { background: var(--surface-2); }
+  table.cmp .mini-ext { font-family: 'JetBrains Mono', monospace; font-size: .76rem; color: var(--accent-hover); }
+  .cmp-bar { height: 6px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; margin-top: 5px; }
+  .cmp-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); }
+
+  /* quiz */
+  .quiz { padding: 26px 28px 30px; }
+  .quiz-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .quiz h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em; }
+  .quiz-steps { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--text-faint); }
+  .quiz-q { font-size: 1.05rem; font-weight: 600; margin: 18px 0 16px; }
+  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .quiz-opts { grid-template-columns: 1fr; } }
+  .quiz-opt {
+    text-align: left; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 11px; padding: 14px 16px; cursor: pointer; font-family: inherit; font-size: .92rem; font-weight: 500;
+    transition: all .18s;
+  }
+  .quiz-opt:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-2px); }
+  .quiz-progress { height: 5px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-bottom: 4px; }
+  .quiz-progress i { display: block; height: 100%; background: var(--accent); transition: width .35s ease; }
+  .quiz-results { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .res-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--lang-color, var(--accent));
+    border-radius: 12px; padding: 14px 16px; animation: cardIn .4s ease both;
+  }
+  .res-rank { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-hover); font-size: 1.1rem; width: 28px; }
+  .res-ic { font-size: 1.6rem; }
+  .res-main { flex: 1; min-width: 0; }
+  .res-name { font-weight: 700; }
+  .res-desc { font-size: .82rem; color: var(--text-dim); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* navegación modal (prev/next/fav) */
+  .modal-actions { position: absolute; top: 18px; right: 18px; display: flex; gap: 8px; }
+  .modal-actions .mbtn {
+    width: 34px; height: 34px; display: grid; place-items: center;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px;
+    color: var(--text-dim); cursor: pointer; transition: all .18s;
+  }
+  .modal-actions .mbtn:hover { color: var(--text); border-color: var(--border-strong); }
+  .modal-actions .mbtn.fav.on { color: #f59e0b; }
+  .modal-actions .mbtn.fav.on svg { fill: #f59e0b; }
+  .modal-close { position: static; }
 </style>
 </head>
 <body>
@@ -422,6 +606,11 @@
       </div>
 
       <div class="header-actions">
+        <!-- BOTÓN DE VISTA (cuadrícula / cronología) -->
+        <button class="iconbtn" id="viewBtn" aria-label="Cambiar vista" title="Cambiar vista">
+          <svg class="v-grid" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <svg class="v-time" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><path d="M5 8v8"/><path d="M10 6h10M10 18h10"/></svg>
+        </button>
         <!-- BOTÓN DE IDIOMA -->
         <button class="iconbtn" id="langBtn" aria-label="Cambiar idioma" title="Cambiar idioma">
           <svg class="globe" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
@@ -447,6 +636,12 @@
   <section class="hero">
     <h1 data-i18n="heroTitle">El atlas de los <span class="accent">lenguajes de programación</span></h1>
     <p data-i18n="heroSub">Su historia, para qué sirven, sus paradigmas y sus extensiones de archivo. Filtra, busca y explora 28 lenguajes con datos reales.</p>
+    <div class="hero-actions">
+      <button class="quiz-cta" id="quizBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span data-i18n="quizCta">¿Qué lenguaje aprender?</span>
+      </button>
+    </div>
     <div class="statusbar">
       <span class="dot"></span>
       <span id="statusText"></span>
@@ -454,6 +649,7 @@
   </section>
 
   <section class="grid" id="grid"></section>
+  <section class="timeline" id="timeline"></section>
 
   <div class="empty" id="empty">
     <div class="big">🔍</div>
@@ -467,9 +663,17 @@
   <span data-i18n="footer">Hecho con</span> <b>&lt;/&gt;</b> · <span class="mono">Lenghist</span> · 28 <span data-i18n="footerLangs">lenguajes</span>
 </footer>
 
-<!-- MODAL -->
+<!-- BARRA DE COMPARACIÓN -->
+<div class="compare-tray" id="compareTray"></div>
+
+<!-- MODAL DE LENGUAJE -->
 <div class="overlay" id="overlay">
   <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<!-- MODAL SECUNDARIO (comparador / quiz) -->
+<div class="overlay2" id="overlay2">
+  <div class="modal2" id="modal2" role="dialog" aria-modal="true"></div>
 </div>
 
 <script>
@@ -492,7 +696,36 @@ const I18N = {
     fame: { top:"Top mundial", popular:"Muy popular", medium:"Popular", niche:"Nicho" },
     extLabel: "Ext",
     source: "Fuente",
-    m: { popularity:"Popularidad", extensions:"Extensiones de archivo", example:"Ejemplo · Hola Mundo", pros:"Ventajas", cons:"Desventajas", creator:"Creador", paradigm:"Paradigma", uses:"Casos de uso", born:"Aparición", source:"Más información" }
+    m: { popularity:"Popularidad", extensions:"Extensiones de archivo", example:"Ejemplo · Hola Mundo", pros:"Ventajas", cons:"Desventajas", creator:"Creador", paradigm:"Paradigma", uses:"Casos de uso", born:"Aparición", source:"Más información", categories:"Categorías" },
+    favs: "Favoritos",
+    cmpAdd: "Comparar", cmpOn: "Quitar", cmpClear: "Vaciar", cmpOpen: "Comparar", cmpTitle: "Comparativa de lenguajes",
+    quizCta: "¿Qué lenguaje aprender?",
+    quizTitle: "¿Qué lenguaje deberías aprender?",
+    quizResult: "Tu recomendación",
+    quizResultSub: "Según tus respuestas, estos lenguajes encajan contigo:",
+    quizRestart: "Repetir test", quizSee: "Ver ficha",
+    quizStep: (a, b) => `Paso ${a} de ${b}`,
+    quizSteps: [
+      { q:"¿Qué te gustaría construir?", opts:[
+        { label:"🌐 Webs y aplicaciones web", cats:["web"] },
+        { label:"📱 Apps móviles", cats:["movil"] },
+        { label:"🎮 Videojuegos", cats:["sistemas"], boost:["C++","C#","Lua"] },
+        { label:"🤖 IA y análisis de datos", cats:["datos","cientifico"] },
+        { label:"⚙️ Sistemas y bajo nivel", cats:["sistemas"] },
+        { label:"🔁 Automatizar tareas", cats:["scripting"] }
+      ]},
+      { q:"¿Cuál es tu nivel?", opts:[
+        { label:"🌱 Principiante", level:"beg" },
+        { label:"🚀 Intermedio", level:"mid" },
+        { label:"🧠 Avanzado", level:"adv" }
+      ]},
+      { q:"¿Qué valoras más?", opts:[
+        { label:"😌 Que sea fácil de aprender", val:"easy" },
+        { label:"⚡ Máximo rendimiento", val:"perf" },
+        { label:"💼 Salidas laborales", val:"jobs" },
+        { label:"✨ Que sea moderno", val:"modern" }
+      ]}
+    ]
   },
   en: {
     tagline: "Language guide",
@@ -509,7 +742,36 @@ const I18N = {
     fame: { top:"World top", popular:"Very popular", medium:"Popular", niche:"Niche" },
     extLabel: "Ext",
     source: "Source",
-    m: { popularity:"Popularity", extensions:"File extensions", example:"Example · Hello World", pros:"Pros", cons:"Cons", creator:"Creator", paradigm:"Paradigm", uses:"Use cases", born:"Released", source:"More info" }
+    m: { popularity:"Popularity", extensions:"File extensions", example:"Example · Hello World", pros:"Pros", cons:"Cons", creator:"Creator", paradigm:"Paradigm", uses:"Use cases", born:"Released", source:"More info", categories:"Categories" },
+    favs: "Favorites",
+    cmpAdd: "Compare", cmpOn: "Remove", cmpClear: "Clear", cmpOpen: "Compare", cmpTitle: "Language comparison",
+    quizCta: "Which language to learn?",
+    quizTitle: "Which language should you learn?",
+    quizResult: "Your recommendation",
+    quizResultSub: "Based on your answers, these languages fit you:",
+    quizRestart: "Restart quiz", quizSee: "View details",
+    quizStep: (a, b) => `Step ${a} of ${b}`,
+    quizSteps: [
+      { q:"What would you like to build?", opts:[
+        { label:"🌐 Websites and web apps", cats:["web"] },
+        { label:"📱 Mobile apps", cats:["movil"] },
+        { label:"🎮 Video games", cats:["sistemas"], boost:["C++","C#","Lua"] },
+        { label:"🤖 AI and data analysis", cats:["datos","cientifico"] },
+        { label:"⚙️ Systems and low-level", cats:["sistemas"] },
+        { label:"🔁 Automate tasks", cats:["scripting"] }
+      ]},
+      { q:"What's your level?", opts:[
+        { label:"🌱 Beginner", level:"beg" },
+        { label:"🚀 Intermediate", level:"mid" },
+        { label:"🧠 Advanced", level:"adv" }
+      ]},
+      { q:"What do you value most?", opts:[
+        { label:"😌 Easy to learn", val:"easy" },
+        { label:"⚡ Maximum performance", val:"perf" },
+        { label:"💼 Job opportunities", val:"jobs" },
+        { label:"✨ Being modern", val:"modern" }
+      ]}
+    ]
   }
 };
 
@@ -956,10 +1218,58 @@ function wikiUrl(name) {
 let lang = localStorage.getItem('lang') || 'es';
 let activeCat = 'all';
 let query = '';
+let view = 'grid';            // 'grid' | 'timeline'
+let favOnly = false;
+const favs = new Set(JSON.parse(localStorage.getItem('favs') || '[]'));
+let compareSet = [];          // nombres de lenguajes, máx 3
+let openIndex = null;         // índice del lenguaje abierto en el modal
+let pendingOpen = null;       // nombre a abrir tras cargar (desde URL)
 const CATS = ['all','web','sistemas','datos','movil','cientifico','scripting','funcional','educativo'];
 
 const $ = s => document.querySelector(s);
 const grid = $('#grid'), filtersEl = $('#filters'), statusText = $('#statusText'), emptyEl = $('#empty');
+const timelineEl = $('#timeline'), tray = $('#compareTray');
+
+const byName = n => LANGS.find(l => l.name === n);
+const getOpenName = () => openIndex != null ? LANGS[openIndex].name : null;
+
+/* ---- Favoritos ---- */
+function toggleFav(name) {
+  favs.has(name) ? favs.delete(name) : favs.add(name);
+  localStorage.setItem('favs', JSON.stringify([...favs]));
+}
+
+/* ---- Comparación ---- */
+function inCompare(name) { return compareSet.includes(name); }
+function toggleCompare(name) {
+  if (inCompare(name)) compareSet = compareSet.filter(n => n !== name);
+  else { if (compareSet.length >= 3) return; compareSet.push(name); }
+  renderTray();
+  if (view === 'timeline') renderTimeline(); else render();
+}
+
+/* ---- Sincronización con la URL (estado compartible) ---- */
+function syncURL() {
+  const p = new URLSearchParams();
+  if (lang !== 'es') p.set('lang', lang);
+  if (query) p.set('q', query);
+  if (activeCat !== 'all') p.set('cat', activeCat);
+  if (view !== 'grid') p.set('view', view);
+  if (favOnly) p.set('fav', '1');
+  if (getOpenName()) p.set('open', getOpenName());
+  const qs = p.toString();
+  history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+}
+function parseURL() {
+  const p = new URLSearchParams(location.search);
+  const lg = p.get('lang'); if (lg === 'en' || lg === 'es') lang = lg;
+  query = p.get('q') || '';
+  const c = p.get('cat'); if (c && CATS.includes(c)) activeCat = c;
+  if (p.get('view') === 'timeline') view = 'timeline';
+  if (p.get('fav') === '1') favOnly = true;
+  pendingOpen = p.get('open') || null;
+  if (query) $('#search').value = query;
+}
 
 /* ============================================================
    TEMA
@@ -970,11 +1280,17 @@ function initTheme() {
   const theme = saved || (prefersLight ? 'light' : 'dark');
   document.documentElement.setAttribute('data-theme', theme);
 }
+function setTheme(next) {
+  const apply = () => {
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  };
+  if (document.startViewTransition) document.startViewTransition(apply);
+  else apply();
+}
 $('#themeBtn').addEventListener('click', () => {
   const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  setTheme(cur === 'light' ? 'dark' : 'light');
 });
 
 /* ============================================================
@@ -994,9 +1310,12 @@ function applyLang() {
     if (t[k]) el.setAttribute('placeholder', t[k]);
   });
   renderFilters();
-  render();
-  // si el modal está abierto, re-renderizar con el nuevo idioma
+  renderActive();
+  renderTray();
+  // re-render de modales abiertos con el nuevo idioma
   if ($('#overlay').classList.contains('open') && openIndex !== null) openModal(openIndex);
+  if ($('#overlay2').classList.contains('open') && overlay2Mode) overlay2Mode();
+  syncURL();
 }
 $('#langBtn').addEventListener('click', () => {
   lang = lang === 'es' ? 'en' : 'es';
@@ -1016,18 +1335,22 @@ function countFor(cat) {
 }
 function renderFilters() {
   const t = I18N[lang];
-  filtersEl.innerHTML = CATS.map(c =>
+  let html = CATS.map(c =>
     `<button class="chip ${c===activeCat?'active':''}" data-cat="${c}">${t.cats[c]} <span class="count">${countFor(c)}</span></button>`
   ).join('');
-  filtersEl.querySelectorAll('.chip').forEach(ch =>
-    ch.addEventListener('click', () => { activeCat = ch.dataset.cat; renderFilters(); render(); })
+  html += `<button class="chip fav-chip ${favOnly?'active':''}" id="favChip" title="${t.favs}">★ ${t.favs} <span class="count">${favs.size}</span></button>`;
+  filtersEl.innerHTML = html;
+  filtersEl.querySelectorAll('.chip[data-cat]').forEach(ch =>
+    ch.addEventListener('click', () => { activeCat = ch.dataset.cat; renderFilters(); renderActive(); syncURL(); })
   );
+  $('#favChip').addEventListener('click', () => { favOnly = !favOnly; renderFilters(); renderActive(); syncURL(); });
 }
 
 /* ============================================================
    RENDER DE CARDS
    ============================================================ */
 function matches(l) {
+  if (favOnly && !favs.has(l.name)) return false;
   if (activeCat !== 'all' && !l.categories.includes(activeCat)) return false;
   if (!query) return true;
   const q = query.toLowerCase();
@@ -1039,52 +1362,107 @@ function matches(l) {
   return hay.includes(q);
 }
 
-function render() {
-  const t = I18N[lang];
-  const list = LANGS.filter(matches);
-  grid.innerHTML = list.map((l) => {
-    const realIdx = LANGS.indexOf(l);
-    const d = l[lang];
-    return `
-    <article class="card" style="--lang-color:${l.color}" data-idx="${realIdx}" tabindex="0">
-      <div class="card-top">
-        <div class="card-id">
-          <div class="card-icon">${l.icon}</div>
-          <div>
-            <div class="card-name">${l.name}</div>
-            <div class="card-year">${t.m.born} ${l.year}</div>
-          </div>
+function visibleList() {
+  let list = LANGS.filter(matches);
+  if (view === 'timeline') list = list.slice().sort((a, b) => a.year - b.year);
+  return list;
+}
+
+const starSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.5 7 .9-5 4.8 1.2 7L12 18l-6.4 3.2L6.8 14l-5-4.8 7-.9z"/></svg>`;
+
+function cardHTML(l) {
+  const realIdx = LANGS.indexOf(l), d = l[lang], t = I18N[lang];
+  return `
+  <article class="card" style="--lang-color:${l.color}" data-idx="${realIdx}" tabindex="0">
+    <div class="card-top">
+      <div class="card-id">
+        <div class="card-icon">${l.icon}</div>
+        <div>
+          <div class="card-name">${l.name}</div>
+          <div class="card-year">${t.m.born} ${l.year}</div>
         </div>
+      </div>
+      <div class="card-right">
+        <button class="fav-btn ${favs.has(l.name)?'on':''}" data-fav="${l.name}" aria-label="${t.favs}" title="${t.favs}">${starSVG}</button>
         <span class="fame ${l.fame}">${t.fame[l.fame]}</span>
       </div>
-      <div class="tags">${l.categories.slice(0,3).map(c=>`<span class="tag">${t.cats[c]}</span>`).join('')}</div>
-      <p class="card-desc">${d.desc}</p>
-      <div class="ext-row"><span class="ext-label">${t.extLabel}</span>${l.extensions.slice(0,4).map(e=>`<span class="ext mono">${e}</span>`).join('')}</div>
-      <div class="uses-row">${d.uses.map(u=>`<span class="pill">${u}</span>`).join('')}</div>
-      <div class="card-foot">
-        <a class="wiki-link" href="${wikiUrl(l.name)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
-          Wikipedia
-        </a>
-      </div>
-    </article>`;
-  }).join('');
+    </div>
+    <div class="tags">${l.categories.slice(0,3).map(c=>`<span class="tag">${t.cats[c]}</span>`).join('')}</div>
+    <p class="card-desc">${d.desc}</p>
+    <div class="ext-row"><span class="ext-label">${t.extLabel}</span>${l.extensions.slice(0,4).map(e=>`<span class="ext mono">${e}</span>`).join('')}</div>
+    <div class="uses-row">${d.uses.map(u=>`<span class="pill">${u}</span>`).join('')}</div>
+    <div class="card-foot">
+      <a class="wiki-link" href="${wikiUrl(l.name)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+        Wikipedia
+      </a>
+      <button class="cmp-btn ${inCompare(l.name)?'on':''}" data-cmp="${l.name}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4M7 4 3 8M7 4l4 4"/><path d="M17 8v12M17 20l4-4M17 20l-4-4"/></svg>
+        ${inCompare(l.name) ? t.cmpOn : t.cmpAdd}
+      </button>
+    </div>
+  </article>`;
+}
 
-  grid.querySelectorAll('.card').forEach(c => {
+function wireCards(container) {
+  container.querySelectorAll('.card').forEach(c => {
     const idx = +c.dataset.idx;
-    c.addEventListener('click', () => openModal(idx));
+    c.addEventListener('click', e => {
+      if (e.target.closest('.fav-btn, .cmp-btn, .wiki-link')) return;
+      openModal(idx);
+    });
     c.addEventListener('keydown', e => { if (e.key === 'Enter') openModal(idx); });
   });
+  container.querySelectorAll('.fav-btn').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation(); toggleFav(b.dataset.fav); renderFilters(); renderActive(); syncURL();
+  }));
+  container.querySelectorAll('.cmp-btn').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation(); toggleCompare(b.dataset.cmp);
+  }));
+}
 
+function render() {
+  const t = I18N[lang];
+  timelineEl.style.display = 'none';
+  const list = LANGS.filter(matches);
+  grid.innerHTML = list.map(cardHTML).join('');
+  wireCards(grid);
   statusText.innerHTML = t.showing(list.length, LANGS.length);
   emptyEl.classList.toggle('show', list.length === 0);
-  grid.style.display = list.length === 0 ? 'none' : '';
+  grid.style.display = list.length === 0 ? 'none' : 'grid';
+  updateViewBtn();
+}
+
+function renderTimeline() {
+  const t = I18N[lang];
+  grid.style.display = 'none';
+  const list = visibleList();
+  timelineEl.style.display = list.length === 0 ? 'none' : 'block';
+  timelineEl.innerHTML = list.map(l => {
+    const realIdx = LANGS.indexOf(l), d = l[lang];
+    return `<button class="tl-item" style="--lang-color:${l.color}" data-idx="${realIdx}">
+      <span class="tl-year">${l.year}</span>
+      <span class="tl-dot"></span>
+      <span class="tl-card"><span class="tl-icon">${l.icon}</span><span style="min-width:0"><span class="tl-name" style="display:block">${l.name}</span><span class="tl-desc">${d.desc}</span></span></span>
+    </button>`;
+  }).join('');
+  timelineEl.querySelectorAll('.tl-item').forEach(it => it.addEventListener('click', () => openModal(+it.dataset.idx)));
+  statusText.innerHTML = t.showing(list.length, LANGS.length);
+  emptyEl.classList.toggle('show', list.length === 0);
+  updateViewBtn();
+}
+
+function renderActive() { view === 'timeline' ? renderTimeline() : render(); }
+
+function updateViewBtn() {
+  const isTL = view === 'timeline';
+  $('#viewBtn .v-grid').style.display = isTL ? 'none' : 'block';
+  $('#viewBtn .v-time').style.display = isTL ? 'block' : 'none';
 }
 
 /* ============================================================
    MODAL
    ============================================================ */
-let openIndex = null;
 function openModal(idx) {
   openIndex = idx;
   const l = LANGS[idx], d = l[lang], t = I18N[lang];
@@ -1093,9 +1471,18 @@ function openModal(idx) {
   $('#modal').style.setProperty('--lang-color', l.color);
   $('#modal').innerHTML = `
     <div class="modal-head">
-      <button class="modal-close" id="closeBtn" aria-label="Cerrar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
+      <div class="modal-actions">
+        <button class="mbtn fav ${favs.has(l.name)?'on':''}" id="modalFav" aria-label="${t.favs}" title="${t.favs}">${starSVG}</button>
+        <button class="mbtn" id="prevBtn" aria-label="Anterior" title="←">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="mbtn" id="nextBtn" aria-label="Siguiente" title="→">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="mbtn modal-close" id="closeBtn" aria-label="Cerrar" title="Esc">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
       <div class="modal-id">
         <div class="modal-icon">${l.icon}</div>
         <div>
@@ -1156,24 +1543,208 @@ function openModal(idx) {
   $('#overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   $('#closeBtn').addEventListener('click', closeModal);
+  $('#modalFav').addEventListener('click', () => {
+    toggleFav(l.name);
+    $('#modalFav').classList.toggle('on');
+    renderFilters(); renderActive(); syncURL();
+  });
+  $('#prevBtn').addEventListener('click', () => navModal(-1));
+  $('#nextBtn').addEventListener('click', () => navModal(1));
   requestAnimationFrame(() => { $('#popfill').style.width = l.popularity + '%'; });
+  syncURL();
 }
+
+function navModal(dir) {
+  const list = visibleList();
+  if (!list.length) return;
+  let i = list.indexOf(LANGS[openIndex]);
+  if (i < 0) i = 0;
+  i = (i + dir + list.length) % list.length;
+  openModal(LANGS.indexOf(list[i]));
+}
+
 function closeModal() {
   $('#overlay').classList.remove('open');
-  document.body.style.overflow = '';
+  if (!$('#overlay2').classList.contains('open')) document.body.style.overflow = '';
   openIndex = null;
+  syncURL();
 }
 $('#overlay').addEventListener('click', e => { if (e.target === $('#overlay')) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if ($('#overlay2').classList.contains('open')) return closeOverlay2();
+    if ($('#overlay').classList.contains('open')) return closeModal();
+  }
+  if ($('#overlay').classList.contains('open') && openIndex !== null) {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); navModal(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); navModal(1); }
+  }
+});
 
 /* ============================================================
-   BÚSQUEDA + atajos
+   SEGUNDO OVERLAY (comparador / quiz)
    ============================================================ */
-$('#search').addEventListener('input', e => { query = e.target.value.trim(); render(); });
+let overlay2Mode = null;
+function openOverlay2(html, mode) {
+  overlay2Mode = mode || null;
+  $('#modal2').innerHTML = html;
+  $('#overlay2').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const cb = $('#modal2').querySelector('[data-close2]');
+  if (cb) cb.addEventListener('click', closeOverlay2);
+}
+function closeOverlay2() {
+  $('#overlay2').classList.remove('open');
+  overlay2Mode = null;
+  if (!$('#overlay').classList.contains('open')) document.body.style.overflow = '';
+}
+$('#overlay2').addEventListener('click', e => { if (e.target === $('#overlay2')) closeOverlay2(); });
+
+/* ============================================================
+   BARRA + MODAL DE COMPARACIÓN
+   ============================================================ */
+function renderTray() {
+  const t = I18N[lang];
+  if (compareSet.length === 0) { tray.classList.remove('show'); tray.innerHTML = ''; return; }
+  tray.classList.add('show');
+  tray.innerHTML = `
+    <div class="tray-inner wrap">
+      <div class="tray-items">${compareSet.map(n => { const l = byName(n); return `<span class="tray-chip" style="--lang-color:${l.color}"><span>${l.icon} ${l.name}</span><button data-rm="${n}" aria-label="${t.cmpOn}">✕</button></span>`; }).join('')}</div>
+      <div class="tray-actions">
+        <button class="iconbtn" id="trayClear">${t.cmpClear}</button>
+        <button class="iconbtn primary" id="trayGo" ${compareSet.length < 2 ? 'disabled' : ''}>${t.cmpOpen} (${compareSet.length})</button>
+      </div>
+    </div>`;
+  tray.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => toggleCompare(b.dataset.rm)));
+  $('#trayClear').addEventListener('click', () => { compareSet = []; renderTray(); renderActive(); });
+  $('#trayGo').addEventListener('click', openCompare);
+}
+
+function openCompare() {
+  if (compareSet.length < 2) return;
+  const t = I18N[lang], items = compareSet.map(byName);
+  const cols = items.map(l => `<th><div class="cmp-lang" style="color:${l.color}"><span class="ic">${l.icon}</span>${l.name}</div></th>`).join('');
+  const row = (k, cells) => `<tr><td class="row-k">${k}</td>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+  const body = [
+    row(t.m.born, items.map(l => `<span class="mono">${l.year}</span>`)),
+    row(t.m.creator, items.map(l => l.creator)),
+    row(t.m.paradigm, items.map(l => l[lang].paradigm)),
+    row(t.m.popularity, items.map(l => `${l.popularity}/100<div class="cmp-bar"><i style="width:${l.popularity}%"></i></div>`)),
+    row(t.m.categories, items.map(l => l.categories.map(c => t.cats[c]).join(', '))),
+    row(t.m.extensions, items.map(l => `<span class="mini-ext">${l.extensions.join(' ')}</span>`)),
+    row(t.m.uses, items.map(l => l[lang].uses.join(', '))),
+    row(t.m.pros, items.map(l => l[lang].pros.join(' · '))),
+    row(t.m.cons, items.map(l => l[lang].cons.join(' · ')))
+  ].join('');
+  openOverlay2(`
+    <div class="modal-head">
+      <div class="modal-actions"><button class="mbtn modal-close" data-close2 aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="modal-id"><div class="modal-icon">⇄</div><div><h2>${t.cmpTitle}</h2></div></div>
+    </div>
+    <div class="cmp-wrap">
+      <table class="cmp"><thead><tr><th></th>${cols}</tr></thead><tbody>${body}</tbody></table>
+    </div>`, openCompare);
+}
+
+/* ============================================================
+   QUIZ — ¿qué lenguaje aprender?
+   ============================================================ */
+let quizState = null;
+function startQuiz() {
+  quizState = { step: 0, cats: [], boost: [], level: null, val: null };
+  renderQuizStep();
+}
+function renderQuizStep() {
+  const t = I18N[lang], steps = t.quizSteps;
+  if (!quizState) return;
+  if (quizState.step >= steps.length) return renderQuizResult();
+  const s = steps[quizState.step];
+  const pct = Math.round((quizState.step / steps.length) * 100);
+  openOverlay2(`
+    <div class="quiz">
+      <div class="quiz-head">
+        <h2>${t.quizTitle}</h2>
+        <button class="mbtn modal-close" data-close2 aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="quiz-progress"><i style="width:${pct}%"></i></div>
+      <div class="quiz-steps">${t.quizStep(quizState.step + 1, steps.length)}</div>
+      <div class="quiz-q">${s.q}</div>
+      <div class="quiz-opts">${s.opts.map((o, i) => `<button class="quiz-opt" data-opt="${i}">${o.label}</button>`).join('')}</div>
+    </div>`, renderQuizStep);
+  $('#modal2').querySelectorAll('.quiz-opt').forEach(b => b.addEventListener('click', () => {
+    const o = s.opts[+b.dataset.opt];
+    if (o.cats) quizState.cats.push(...o.cats);
+    if (o.boost) quizState.boost.push(...o.boost);
+    if (o.level) quizState.level = o.level;
+    if (o.val) quizState.val = o.val;
+    quizState.step++;
+    renderQuizStep();
+  }));
+}
+function scoreLang(l) {
+  const s = quizState; let score = 0;
+  s.cats.forEach(c => { if (l.categories.includes(c)) score += 4; });
+  if (s.boost.includes(l.name)) score += 5;
+  if (s.val === 'easy') {
+    if (l.fame === 'top' || l.fame === 'popular') score += 3;
+    if (l.categories.includes('educativo')) score += 2;
+  }
+  if (s.val === 'perf') {
+    if (l.categories.includes('sistemas')) score += 3;
+    if (['C', 'C++', 'Rust', 'Go'].includes(l.name)) score += 2;
+  }
+  if (s.val === 'jobs') score += l.popularity / 18;
+  if (s.val === 'modern') score += Math.max(0, (l.year - 2000) / 3);
+  if (s.level === 'beg') {
+    if (l.fame === 'top' || l.fame === 'popular') score += 3;
+    if (l.categories.includes('educativo')) score += 3;
+    if (l.categories.includes('funcional')) score -= 2;
+  }
+  if (s.level === 'adv') {
+    if (l.categories.includes('funcional') || l.categories.includes('sistemas')) score += 2;
+  }
+  return score;
+}
+function renderQuizResult() {
+  const t = I18N[lang];
+  const ranked = LANGS.map(l => ({ l, s: scoreLang(l) })).sort((a, b) => b.s - a.s).slice(0, 3);
+  openOverlay2(`
+    <div class="quiz">
+      <div class="quiz-head">
+        <h2>${t.quizResult}</h2>
+        <button class="mbtn modal-close" data-close2 aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:6px">${t.quizResultSub}</p>
+      <div class="quiz-results">
+        ${ranked.map((r, i) => `
+          <div class="res-card" style="--lang-color:${r.l.color}">
+            <span class="res-rank">#${i + 1}</span>
+            <span class="res-ic">${r.l.icon}</span>
+            <div class="res-main"><div class="res-name">${r.l.name}</div><div class="res-desc">${r.l[lang].desc}</div></div>
+            <button class="iconbtn" data-see="${LANGS.indexOf(r.l)}">${t.quizSee}</button>
+          </div>`).join('')}
+      </div>
+      <div class="hero-actions" style="margin-top:18px">
+        <button class="quiz-cta" id="quizRestart">${t.quizRestart}</button>
+      </div>
+    </div>`, renderQuizResult);
+  $('#modal2').querySelectorAll('[data-see]').forEach(b => b.addEventListener('click', () => { closeOverlay2(); openModal(+b.dataset.see); }));
+  $('#quizRestart').addEventListener('click', startQuiz);
+}
+
+/* ============================================================
+   BÚSQUEDA + VISTA + atajos
+   ============================================================ */
+$('#search').addEventListener('input', e => { query = e.target.value.trim(); renderActive(); syncURL(); });
 $('#resetBtn').addEventListener('click', () => {
-  query = ''; activeCat = 'all'; $('#search').value = '';
-  renderFilters(); render();
+  query = ''; activeCat = 'all'; favOnly = false; $('#search').value = '';
+  renderFilters(); renderActive(); syncURL();
 });
+$('#viewBtn').addEventListener('click', () => {
+  view = view === 'grid' ? 'timeline' : 'grid';
+  renderActive(); syncURL();
+});
+$('#quizBtn').addEventListener('click', startQuiz);
 document.addEventListener('keydown', e => {
   if (e.key === '/' && document.activeElement !== $('#search')) {
     e.preventDefault(); $('#search').focus();
@@ -1183,8 +1754,13 @@ document.addEventListener('keydown', e => {
 /* ============================================================
    INIT
    ============================================================ */
+parseURL();
 initTheme();
 applyLang();
+if (pendingOpen) {
+  const i = LANGS.findIndex(l => l.name === pendingOpen);
+  if (i >= 0) openModal(i);
+}
 </script>
 
 <!--
