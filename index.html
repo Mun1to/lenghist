@@ -605,6 +605,25 @@
     color: #e4e4e7; max-width: 300px; white-space: pre;
   }
   table.cmp td .mini-ext { display: inline-block; margin: 0 3px 3px 0; }
+
+  /* recursos de desarrollo */
+  .res-cta { color: var(--good); background: color-mix(in srgb, var(--good) 12%, transparent); border-color: color-mix(in srgb, var(--good) 35%, transparent); }
+  .res-cta:hover { background: color-mix(in srgb, var(--good) 20%, transparent); }
+  .res-section { margin-bottom: 22px; }
+  .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .res-grid { grid-template-columns: 1fr; } }
+  .res-item {
+    display: flex; align-items: flex-start; gap: 11px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px;
+    padding: 12px 14px; text-decoration: none; color: inherit;
+    transition: border-color .18s, transform .15s, background .18s;
+  }
+  .res-item:hover { border-color: var(--accent); transform: translateY(-2px); background: var(--accent-soft); }
+  .res-ext { color: var(--text-faint); flex: 0 0 auto; margin-top: 2px; }
+  .res-item:hover .res-ext { color: var(--accent-hover); }
+  .res-text { display: flex; flex-direction: column; min-width: 0; }
+  .res-name { font-weight: 700; font-size: .9rem; }
+  .res-desc { font-size: .78rem; color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -658,6 +677,10 @@
       <button class="quiz-cta" id="quizBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
         <span data-i18n="quizCta">¿Qué lenguaje aprender?</span>
+      </button>
+      <button class="quiz-cta res-cta" id="resourcesBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        <span data-i18n="resCta">Recursos de desarrollo</span>
       </button>
     </div>
     <div class="statusbar">
@@ -717,6 +740,10 @@ const I18N = {
     m: { popularity:"Popularidad", extensions:"Extensiones de archivo", example:"Ejemplo · Hola Mundo", pros:"Ventajas", cons:"Desventajas", creator:"Creador", paradigm:"Paradigma", uses:"Casos de uso", born:"Aparición", source:"Más información", categories:"Categorías", frameworks:"Frameworks y herramientas" },
     favs: "Favoritos",
     cmpAdd: "Comparar", cmpOn: "Quitar", cmpClear: "Vaciar", cmpOpen: "Comparar", cmpTitle: "Comparativa de lenguajes",
+    resCta: "Recursos de desarrollo",
+    resTitle: "Recursos para desarrollar",
+    resSub: "Páginas y herramientas recomendadas para maquetar, animar y dar estilo a tus webs y apps.",
+    resCats: { css:"Frameworks CSS y estructura", ui:"Componentes y librerías UI", buttons:"Botones y efectos", anim:"Animaciones y movimiento", icons:"Iconos", color:"Color y gradientes", bg:"Fondos, sombras y formas", type:"Tipografía", img:"Ilustraciones e imágenes", learn:"Inspiración y aprendizaje" },
     quizCta: "¿Qué lenguaje aprender?",
     quizTitle: "¿Qué lenguaje deberías aprender?",
     quizResult: "Tu recomendación",
@@ -763,6 +790,10 @@ const I18N = {
     m: { popularity:"Popularity", extensions:"File extensions", example:"Example · Hello World", pros:"Pros", cons:"Cons", creator:"Creator", paradigm:"Paradigm", uses:"Use cases", born:"Released", source:"More info", categories:"Categories", frameworks:"Frameworks & tools" },
     favs: "Favorites",
     cmpAdd: "Compare", cmpOn: "Remove", cmpClear: "Clear", cmpOpen: "Compare", cmpTitle: "Language comparison",
+    resCta: "Dev resources",
+    resTitle: "Resources for developers",
+    resSub: "Recommended pages and tools to lay out, animate and style your sites and apps.",
+    resCats: { css:"CSS frameworks & layout", ui:"UI components & libraries", buttons:"Buttons & effects", anim:"Animation & motion", icons:"Icons", color:"Color & gradients", bg:"Backgrounds, shadows & shapes", type:"Typography", img:"Illustrations & images", learn:"Inspiration & learning" },
     quizCta: "Which language to learn?",
     quizTitle: "Which language should you learn?",
     quizResult: "Your recommendation",
@@ -1587,6 +1618,82 @@ const ECO = {
 const ecoFor = name => ECO[name] || [];
 
 /* ============================================================
+   RECURSOS DE DESARROLLO — páginas y herramientas visuales/frontend
+   ============================================================ */
+const RESOURCES = [
+  { cat:"css", items:[
+    { name:"Tailwind CSS", url:"https://tailwindcss.com", es:"CSS utilitario, el estándar actual", en:"Utility-first CSS, today's standard" },
+    { name:"Bootstrap", url:"https://getbootstrap.com", es:"Componentes y grid clásicos", en:"Classic components & grid" },
+    { name:"Bulma", url:"https://bulma.io", es:"Framework CSS basado en Flexbox", en:"Flexbox-based CSS framework" },
+    { name:"Pico.css", url:"https://picocss.com", es:"CSS mínimo y sin clases", en:"Minimal classless CSS" },
+    { name:"Open Props", url:"https://open-props.style", es:"Variables CSS listas para usar", en:"Ready-to-use CSS variables" }
+  ]},
+  { cat:"ui", items:[
+    { name:"shadcn/ui", url:"https://ui.shadcn.com", es:"Componentes copia-pega (React)", en:"Copy-paste components (React)" },
+    { name:"daisyUI", url:"https://daisyui.com", es:"Componentes para Tailwind", en:"Components for Tailwind" },
+    { name:"Material UI", url:"https://mui.com", es:"Material Design en React", en:"Material Design for React" },
+    { name:"Radix UI", url:"https://www.radix-ui.com", es:"Primitivas accesibles sin estilo", en:"Unstyled accessible primitives" },
+    { name:"HyperUI", url:"https://www.hyperui.dev", es:"Componentes Tailwind gratis", en:"Free Tailwind components" }
+  ]},
+  { cat:"buttons", items:[
+    { name:"Uiverse", url:"https://uiverse.io", es:"Botones y efectos de la comunidad", en:"Community buttons & effects" },
+    { name:"CSS Buttons", url:"https://getcssscan.com/css-buttons-examples", es:"Botones CSS listos para copiar", en:"Ready-to-copy CSS buttons" },
+    { name:"Animista", url:"https://animista.net", es:"Generador de animaciones CSS", en:"CSS animation generator" },
+    { name:"Hover.css", url:"https://ianlunn.github.io/Hover/", es:"Efectos hover listos", en:"Ready hover effects" },
+    { name:"Neumorphism.io", url:"https://neumorphism.io", es:"Generador de sombras suaves", en:"Soft shadow generator" }
+  ]},
+  { cat:"anim", items:[
+    { name:"GSAP", url:"https://gsap.com", es:"Animaciones JS profesionales", en:"Pro JS animations" },
+    { name:"Framer Motion", url:"https://www.framer.com/motion/", es:"Animaciones para React", en:"Animations for React" },
+    { name:"Animate.css", url:"https://animate.style", es:"Animaciones CSS listas", en:"Ready CSS animations" },
+    { name:"AOS", url:"https://michalsnik.github.io/aos/", es:"Animar al hacer scroll", en:"Animate on scroll" },
+    { name:"LottieFiles", url:"https://lottiefiles.com", es:"Animaciones vectoriales JSON", en:"JSON vector animations" },
+    { name:"Three.js", url:"https://threejs.org", es:"Gráficos y 3D en la web", en:"Web graphics & 3D" }
+  ]},
+  { cat:"icons", items:[
+    { name:"Lucide", url:"https://lucide.dev", es:"Iconos SVG limpios y abiertos", en:"Clean open-source SVG icons" },
+    { name:"Heroicons", url:"https://heroicons.com", es:"Iconos del equipo de Tailwind", en:"Icons by the Tailwind team" },
+    { name:"Font Awesome", url:"https://fontawesome.com", es:"La mayor biblioteca de iconos", en:"The largest icon library" },
+    { name:"Tabler Icons", url:"https://tabler.io/icons", es:"Más de 5000 iconos SVG", en:"5000+ SVG icons" },
+    { name:"Phosphor Icons", url:"https://phosphoricons.com", es:"Iconos flexibles y consistentes", en:"Flexible, consistent icons" }
+  ]},
+  { cat:"color", items:[
+    { name:"Coolors", url:"https://coolors.co", es:"Generador de paletas de color", en:"Color palette generator" },
+    { name:"Color Hunt", url:"https://colorhunt.co", es:"Paletas de color curadas", en:"Curated color palettes" },
+    { name:"Realtime Colors", url:"https://realtimecolors.com", es:"Prueba paletas en una web real", en:"Test palettes on a real site" },
+    { name:"uiGradients", url:"https://uigradients.com", es:"Gradientes listos para copiar", en:"Ready-to-copy gradients" },
+    { name:"CSS Gradient", url:"https://cssgradient.io", es:"Generador de gradientes CSS", en:"CSS gradient generator" }
+  ]},
+  { cat:"bg", items:[
+    { name:"Haikei", url:"https://haikei.app", es:"Generador de fondos SVG", en:"SVG background generator" },
+    { name:"Hero Patterns", url:"https://heropatterns.com", es:"Patrones SVG repetibles", en:"Repeatable SVG patterns" },
+    { name:"Get Waves", url:"https://getwaves.io", es:"Generador de ondas SVG", en:"SVG wave generator" },
+    { name:"Smooth Shadows", url:"https://shadows.brumm.af", es:"Sombras CSS suaves por capas", en:"Smooth layered CSS shadows" },
+    { name:"CSSmatic", url:"https://www.cssmatic.com", es:"Gradientes, sombras y más", en:"Gradients, shadows & more" }
+  ]},
+  { cat:"type", items:[
+    { name:"Google Fonts", url:"https://fonts.google.com", es:"Fuentes web gratuitas", en:"Free web fonts" },
+    { name:"Fontpair", url:"https://www.fontpair.co", es:"Combinaciones de fuentes", en:"Font pairings" },
+    { name:"Type Scale", url:"https://typescale.com", es:"Escala tipográfica visual", en:"Visual type scale" },
+    { name:"Fontjoy", url:"https://fontjoy.com", es:"Emparejar fuentes con IA", en:"Pair fonts with AI" }
+  ]},
+  { cat:"img", items:[
+    { name:"unDraw", url:"https://undraw.co", es:"Ilustraciones SVG gratis", en:"Free SVG illustrations" },
+    { name:"Storyset", url:"https://storyset.com", es:"Ilustraciones personalizables", en:"Customizable illustrations" },
+    { name:"Unsplash", url:"https://unsplash.com", es:"Fotos gratuitas de alta calidad", en:"Free high-quality photos" },
+    { name:"Pexels", url:"https://www.pexels.com", es:"Fotos y vídeos gratis", en:"Free photos & videos" },
+    { name:"DrawKit", url:"https://www.drawkit.com", es:"Ilustraciones y recursos", en:"Illustrations & assets" }
+  ]},
+  { cat:"learn", items:[
+    { name:"Awwwards", url:"https://www.awwwards.com", es:"Inspiración de webs premiadas", en:"Award-winning web inspiration" },
+    { name:"Dribbble", url:"https://dribbble.com", es:"Inspiración de diseño UI", en:"UI design inspiration" },
+    { name:"CodePen", url:"https://codepen.io", es:"Demos y experimentos front", en:"Front-end demos & experiments" },
+    { name:"MDN Web Docs", url:"https://developer.mozilla.org", es:"La referencia de la web", en:"The web reference docs" },
+    { name:"CSS-Tricks", url:"https://css-tricks.com", es:"Guías y trucos de CSS", en:"CSS guides & tricks" }
+  ]}
+];
+
+/* ============================================================
    ESTADO
    ============================================================ */
 let lang = localStorage.getItem('lang') || 'es';
@@ -2119,6 +2226,32 @@ function renderQuizResult() {
 }
 
 /* ============================================================
+   RECURSOS DE DESARROLLO (modal)
+   ============================================================ */
+function openResources() {
+  const t = I18N[lang];
+  const html = `
+    <div class="quiz">
+      <div class="quiz-head">
+        <h2>${t.resTitle}</h2>
+        <button class="mbtn modal-close" data-close2 aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p style="color:var(--text-dim);font-size:.9rem;margin:4px 0 16px">${t.resSub}</p>
+      ${RESOURCES.map(c => `
+        <div class="res-section">
+          <div class="section-title">${t.resCats[c.cat]}</div>
+          <div class="res-grid">
+            ${c.items.map(r => `<a class="res-item" href="${r.url}" target="_blank" rel="noopener">
+              <span class="res-ext"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></span>
+              <span class="res-text"><span class="res-name">${r.name}</span><span class="res-desc">${r[lang]}</span></span>
+            </a>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+  openOverlay2(html, openResources);
+}
+
+/* ============================================================
    BÚSQUEDA + VISTA + atajos
    ============================================================ */
 $('#search').addEventListener('input', e => { query = e.target.value.trim(); renderActive(); syncURL(); });
@@ -2131,6 +2264,7 @@ $('#viewBtn').addEventListener('click', () => {
   renderActive(); syncURL();
 });
 $('#quizBtn').addEventListener('click', startQuiz);
+$('#resourcesBtn').addEventListener('click', openResources);
 document.addEventListener('keydown', e => {
   if (e.key === '/' && document.activeElement !== $('#search')) {
     e.preventDefault(); $('#search').focus();
