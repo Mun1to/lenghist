@@ -6,9 +6,10 @@ Guía interactiva de lenguajes de programación: su historia, para qué sirven, 
 
 ## Características
 
-- 48 lenguajes con datos reales (año, creador, paradigma, popularidad, extensiones, ejemplo de código, pros y contras).
+- 100 lenguajes con datos reales (año, creador, paradigma, popularidad, extensiones, ejemplo de código, pros y contras).
 - 🧰 Frameworks, librerías y herramientas clave de cada lenguaje (en el detalle y en el comparador).
 - 🎨 Sección de recursos: ~50 páginas y herramientas frontend (CSS/UI, botones y efectos, animaciones, iconos, color y gradientes, fondos, tipografía, ilustraciones e inspiración).
+- ✨ Efectos profesionales: spotlight que sigue el cursor en las cards, aurora de fondo animada, resplandor del color de cada lenguaje, entrada escalonada, brillo en botones y scrollbar a medida.
 - 🌗 Modo claro / oscuro con transición suave (View Transitions) y persistencia en `localStorage`.
 - 🌐 Interfaz y contenidos bilingües (Español / Inglés).
 - 🔎 Búsqueda en tiempo real por nombre, descripción, casos de uso y extensión (`.py`, `.rs`…).
