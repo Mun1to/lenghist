@@ -31,3 +31,13 @@ HTML + CSS + JavaScript **vanilla**, sin frameworks ni build step. Todo en un ú
 ## Despliegue
 
 Publicado con GitHub Pages desde la rama `main` (raíz).
+
+---
+
+<div align="center">
+
+🌸 Parte de la **Fundación Orquio** · *Easy Tech*
+
+<sub>Tecnología esencial orquestada de forma optimizada, positiva y transparente.</sub>
+
+</div>
